@@ -26,6 +26,7 @@ Rectangle {
     TextField {
         //Ваше Имя
         id: humanName
+        objectName: "NAME"
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -52,6 +53,7 @@ Rectangle {
     TextField {
         //Ваше Имя
         id: phoneNumber
+        objectName: "PHONE"
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: humanName.bottom
@@ -63,8 +65,8 @@ Rectangle {
         font.pixelSize: height / 2
         placeholderText: "Номер телефона"
         inputMethodHints: Qt.ImhPreferNumbers
-
         Keys.onPressed: {
+                //Свернуть клавиатуру
                     if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                         Qt.inputMethod.hide()
                         loader.forceActiveFocus()
@@ -86,12 +88,14 @@ Rectangle {
 
     Button {
         id: goNext
+        objectName: "helloButton"
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.margins: 20
         height: parent.height / 10
-        //enabled: phoneNumber.text.length == 10 ? true : false
+        property string phone: phoneNumber.text
+        opacity: phoneNumber.text.length == 10 ? true : 0.5
         Text {
             anchors.fill: parent
             text: "Далее"
@@ -100,34 +104,9 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            requestPOST("http://192.168.1.168:8080/registration", "human=driver&name=ILNUR&phone=000111")
-            requestGET("http://192.168.1.168:8080/towns")
+            backEnd.registrationInServer("driver", phone, "ilnur");
             loader.setSource("qrc:/QMLs/RegPage.qml")
             toolBarText.text = "Выберите направление"
         }
-    }
-
-    function requestGET(url) {
-        var doc = new XMLHttpRequest();
-        doc.onreadystatechange = function() {
-            if (doc.readyState == XMLHttpRequest.DONE) {
-                console.log("townsGet:", doc.responseText)
-            }
-        }
-        doc.open("get", url);
-        doc.setRequestHeader("Content-Encoding", "UTF-8");
-        doc.send();
-    }
-
-    function requestPOST(url, post) {
-        var doc = new XMLHttpRequest();
-        doc.onreadystatechange = function() {
-            if (doc.readyState == XMLHttpRequest.DONE) {
-                console.log("registrated!:", doc.responseText)
-            }
-        }
-        doc.open("post", url);
-        doc.setRequestHeader("Content-Encoding", "UTF-8");
-        doc.send(post);
     }
 }

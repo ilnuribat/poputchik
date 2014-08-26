@@ -37,6 +37,7 @@ Rectangle {
 
     ListModel {
         id: timeModel
+        objectName: "TimePageData"
         ListElement {
 
             passanger: "0"

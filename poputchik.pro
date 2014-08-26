@@ -2,7 +2,8 @@ TEMPLATE = app
 
 QT += qml quick widgets network
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    backend.cpp
 
 RESOURCES += qml.qrc
 
@@ -16,3 +17,6 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 OTHER_FILES += \
     android/AndroidManifest.xml
+
+HEADERS += \
+    backend.h
