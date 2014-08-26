@@ -1,4 +1,4 @@
-import QtQuick 2.2
+import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
 import "QMLs"
@@ -28,7 +28,7 @@ ApplicationWindow {
 
     Loader {
         id: loader
-        x:0
+        x: 0
         y: toolBar.y + toolBar.height
         height: parent.height - y
         width: parent.width

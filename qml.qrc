@@ -4,5 +4,25 @@
         <file>QMLs/HelloPage.qml</file>
         <file>QMLs/RegPage.qml</file>
         <file>QMLs/TimePage.qml</file>
+        <file>QMLs/WaitingPage.qml</file>
+    </qresource>
+    <qresource prefix="/image">
+        <file>images/car.png</file>
+        <file>images/car.svg</file>
+        <file>images/car1.png</file>
+        <file>images/car50.png</file>
+        <file>images/car100.png</file>
+        <file>images/car700.png</file>
+        <file>images/fon.png</file>
+        <file>images/fon_cell_of_table.png</file>
+        <file>images/fon_cell_of_table_100.png</file>
+        <file>images/fon_grid.png</file>
+        <file>images/fon1.png</file>
+        <file>images/human.png</file>
+        <file>images/human_1.png</file>
+        <file>images/human_1_fone.png</file>
+        <file>images/success.png</file>
+        <file>images/tableFon.png</file>
+        <file>images/tableFon.svg</file>
     </qresource>
 </RCC>

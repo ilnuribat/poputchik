@@ -1,0 +1,24 @@
+E:\android\projects\poputchik\android-build\gen\com\ru\poputchik\R.java \
+ : E:\android\projects\poputchik\android-build\res\layout\splash.xml \
+E:\android\projects\poputchik\android-build\res\values\libs.xml \
+E:\android\projects\poputchik\android-build\res\values\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-de\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-el\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-es\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-et\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-fa\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-fr\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-id\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-it\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-ja\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-ms\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-nb\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-nl\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-pl\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-pt-rBR\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-ro\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-rs\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-ru\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-zh-rCN\strings.xml \
+E:\android\projects\poputchik\android-build\res\values-zh-rTW\strings.xml \
+E:\android\projects\poputchik\android-build\bin\AndroidManifest.xml \

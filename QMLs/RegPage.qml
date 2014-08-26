@@ -131,9 +131,10 @@ Rectangle {
     Button {
         id: goTable
         anchors.right: parent.right
-        anchors.left: parent.left
+        width: parent.width * 0.7
         anchors.bottom: parent.bottom
-        anchors.margins: 10
+        anchors.bottomMargin: 20
+
         height: parent.height / 10
         //enabled: phoneNumber.text.length == 10 ? true : false
         Text {
@@ -146,6 +147,25 @@ Rectangle {
         onClicked: {
             loader.setSource("qrc:/QMLs/TimePage.qml")
             toolBarText.text = "Выберите время"
+        }
+    }
+
+    Button {
+        id: goToBack
+        height: parent.height / 10
+        anchors.left: parent.left
+        anchors.rightMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+        anchors.right: goTable.left
+        Text {
+            anchors.centerIn: parent
+            font.pixelSize: parent.height / 2
+            text: "Назад"
+        }
+        onClicked: {
+            loader.setSource("qrc:/QMLs/HelloPage.qml")
+            toolBarText.text = "Добро пожаловать!"
         }
     }
 

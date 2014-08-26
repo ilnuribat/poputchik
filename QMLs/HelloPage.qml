@@ -89,7 +89,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        anchors.margins: 10
+        anchors.margins: 20
         height: parent.height / 10
         //enabled: phoneNumber.text.length == 10 ? true : false
         Text {
