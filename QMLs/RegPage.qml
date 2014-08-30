@@ -60,13 +60,6 @@ Rectangle {
             ListElement { text: "Сибай" }
             ListElement { text: "Учалы" }
         }
-        onAccepted: {
-            if (editableCombo.find(currentText) === -1) {
-                model.append({text: editText})
-                currentIndex = editableCombo.find(editText)
-            }
-        }
-
     }
 
     ComboBox {
@@ -83,13 +76,6 @@ Rectangle {
             ListElement { text: "Сибай" }
             ListElement { text: "Учалы" }
         }
-        onAccepted: {
-            if (editableCombo.find(currentText) === -1) {
-                model1.append({text: editText})
-                currentIndex = editableCombo.find(editText)
-            }
-        }
-
     }
 
     ComboBox {
@@ -126,6 +112,16 @@ Rectangle {
         font.pixelSize: height / 2.5
         wrapMode: Text.WordWrap
         text: passangerButton.enabled ? "Сколько свободных мест" : "Сколько мест забронировать"
+    }
+
+    Text {
+        id: iD
+        objectName: "idDD"
+        anchors.bottom: goTable.top
+        anchors.left: goTable.left
+        anchors.right: goTable.right
+        height: goTable.height
+        font.pixelSize: height / 2
     }
 
     Button {

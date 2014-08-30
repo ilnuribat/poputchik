@@ -8,7 +8,7 @@ Rectangle {
     id: timeMain
     color: 'darkgrey'
     Rectangle {
-        id: chooseTimeSegment
+        id: chooseTimeSegmentTitle
         anchors.top:  parent.top
         height: parent.height / 10
         anchors.left: parent.left
@@ -18,20 +18,31 @@ Rectangle {
             //Время
             id: titleTime
             anchors.top: parent.top
-            x: parent.width * 0.15
-            width: parent.left * 0.8
+            anchors.left: parent.left
+            width: parent.width * 0.6
             height: parent.height
             font.pixelSize: height / 2
             color: "black"
+            horizontalAlignment: Text.AlignHCenter
             text: "Время"
         }
         Image {
-            //anchors.left: titleTime.right
-            x: parent.width * 0.55
+            id: carImage
+            anchors.left: titleTime.right
             anchors.top: parent.top
-            width: parent.width * 0.15
+            width: parent.height * 1.2
             height: parent.height
             source: "qrc:/image/images/car50.png"
+        }
+        Image {
+            id: passagerImage
+            anchors.right: parent.right
+            width: parent.height * 1.2
+            anchors.rightMargin: parent.height * 0.2
+            anchors.top: parent.top
+            height: parent.height
+            horizontalAlignment: Image.AlignHCenter
+            source: "qrc:/image/images/human.png"
         }
     }
 
@@ -82,7 +93,7 @@ Rectangle {
     }
 
     ListView {
-        anchors.top: chooseTimeSegment.bottom
+        anchors.top: chooseTimeSegmentTitle.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: goToReg.top
@@ -117,6 +128,7 @@ Rectangle {
                 font.pixelSize: height * 0.3
             }
             Text {
+                id: delegatePassanger
                 anchors.left: delegateDriver.right
                 anchors.right: parent.right
                 anchors.top: parent.top

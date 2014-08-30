@@ -33,6 +33,6 @@ ApplicationWindow {
         height: parent.height - y
         width: parent.width
         focus: true
-        source: "qrc:/QMLs/HelloPage.qml"
+        source: "qrc:/QMLs/TimePage.qml"
     }
 }

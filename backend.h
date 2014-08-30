@@ -19,7 +19,7 @@ private:
     QObject *mainWindow;
     int ID;
     QObject *helloButton;
-    QNetworkAccessManager *pManager;
+    QObject * iDDD;
 
 signals:
 

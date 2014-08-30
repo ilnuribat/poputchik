@@ -98,7 +98,7 @@ Rectangle {
         opacity: phoneNumber.text.length == 10 ? true : 0.5
         Text {
             anchors.fill: parent
-            text: "Далее"
+            text: "Далее1"
             font.pixelSize: parent.height / 2
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
