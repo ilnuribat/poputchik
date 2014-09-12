@@ -8,6 +8,7 @@ Rectangle {
     Text {
         anchors.centerIn: parent
         text: "Ожидание"
+        objectName: "waitingPageText"
         font.pixelSize: parent.height / 15
     }
     Button {
@@ -26,7 +27,8 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            loader.setSource("qrc:/QMLs/TimePage.qml")
+            //loader.setSource("qrc:/QMLs/TimePage.qml")
+            backEnd.waitingPageButton();
             toolBarText.text = "Выберите время"
         }
     }

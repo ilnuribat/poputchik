@@ -8,7 +8,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
     helloButton = mainWindow->findChild<QObject*>("helloButton");
     iDDD = mainWindow->findChild<QObject*>("idDD");
     engine.rootContext()->setContextProperty("backEnd", this);
-
+    waitingPageText = mainWindow->findChild<QObject*>("waitingPageText");
 }
 
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
@@ -33,4 +33,9 @@ void BackEnd::slotregistrationInServer(QNetworkReply *reply)
     QString str = QString(reply->readAll());
     qDebug() << str;
     iDDD->setProperty("text", str);
+}
+
+void BackEnd::waitingPageButton()
+{
+    waitingPageText->setProperty("text", "Ilnur");
 }
