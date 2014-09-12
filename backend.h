@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include <QQmlApplicationEngine>
 #include <QNetworkAccessManager>
+#include <QSettings>
 #include <QtQuick>
 
 class BackEnd : public QQuickItem
@@ -21,6 +22,8 @@ private:
     QObject *helloButton;
     QObject *iDDD;\
     QObject *waitingPageText;
+    QObject *loader;
+    QSettings *settings;
 
 signals:
 

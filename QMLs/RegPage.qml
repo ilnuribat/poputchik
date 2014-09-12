@@ -122,6 +122,7 @@ Rectangle {
         anchors.right: goTable.right
         height: goTable.height
         font.pixelSize: height / 2
+        text: "idDD"
     }
 
     Button {
@@ -163,17 +164,5 @@ Rectangle {
             loader.setSource("qrc:/QMLs/HelloPage.qml")
             toolBarText.text = "Добро пожаловать!"
         }
-    }
-
-    function setText(url) {
-        var doc = new XMLHttpRequest();
-        doc.onreadystatechange = function() {
-            if (doc.readyState == XMLHttpRequest.DONE) {
-                mainText.text = doc.responseText;
-            }
-        }
-        doc.open("post", url);
-        doc.setRequestHeader("Content-Encoding", "UTF-8");
-        doc.send("human=driver&name=ILNUR&phone=000111");
     }
 }

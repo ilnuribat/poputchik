@@ -95,10 +95,10 @@ Rectangle {
         anchors.margins: 20
         height: parent.height / 10
         property string phone: phoneNumber.text
-        opacity: phoneNumber.text.length == 10 ? true : 0.5
+        opacity: phoneNumber.text.length == 10 ? 1 : 0.8
         Text {
             anchors.fill: parent
-            text: "Далее1"
+            text: "Далее"
             font.pixelSize: parent.height / 2
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

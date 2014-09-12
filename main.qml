@@ -7,7 +7,7 @@ ApplicationWindow {
     visible: true
     width: 480
     height: 800
-    objectName: "mainWindow"
+    objectName: "mainQML"
 
     ToolBar {
         id: toolBar
@@ -28,11 +28,13 @@ ApplicationWindow {
 
     Loader {
         id: loader
+        objectName: "loader"
         x: 0
         y: toolBar.y + toolBar.height
         height: parent.height - y
         width: parent.width
+        property bool registered
         focus: true
-        source: "qrc:/QMLs/HelloPage.qml"
+        source: registered ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
     }
 }
