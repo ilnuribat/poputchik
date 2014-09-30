@@ -20,10 +20,11 @@ private:
     QObject *mainWindow;
     int ID;
     QObject *helloButton;
-    QObject *iDDD;\
+    QObject *iDDD;
     QObject *waitingPageText;
     QObject *loader;
     QSettings *settings;
+    QString IP;
 
 signals:
 

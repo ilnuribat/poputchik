@@ -104,7 +104,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            backEnd.registrationInServer("driver", phone, "ilnur");
+            //backEnd.registrationInServer("driver", phone, "ilnur");
             loader.setSource("qrc:/QMLs/RegPage.qml")
             toolBarText.text = "Выберите направление"
         }

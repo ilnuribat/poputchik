@@ -24,6 +24,7 @@ Rectangle {
             font.pixelSize: height / 2
             color: "black"
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
             text: "Время"
         }
         Image {

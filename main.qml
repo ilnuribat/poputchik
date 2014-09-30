@@ -33,8 +33,8 @@ ApplicationWindow {
         y: toolBar.y + toolBar.height
         height: parent.height - y
         width: parent.width
-        property bool registered
+        property string registered
         focus: true
-        source: registered ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
+        source: registered == "true" ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
     }
 }
