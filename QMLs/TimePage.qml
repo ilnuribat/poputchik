@@ -180,6 +180,7 @@ Rectangle {
         }
         onClicked: {
             loader.setSource("qrc:/QMLs/RegPage.qml")
+            backEnd.getTowns()
             toolBarText.text = "Выберите направление"
         }
     }

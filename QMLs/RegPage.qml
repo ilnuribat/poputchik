@@ -5,77 +5,33 @@ import QtQuick.Controls.Styles 1.2
 Rectangle {
     anchors.fill: parent
     color: 'darkgrey'
-
-    Button {
-        //Водитель
-        id: driverButton
-        anchors.top: parent.top
-        anchors.left: parent.left
-        height: parent.height / 10
-        width: parent.width * 0.4
-        anchors.leftMargin: parent.width / 20
-        anchors.topMargin: parent.height / 15
-        Text {
-            text: "Водитель"
-            font.pixelSize: parent.height / 2
-            anchors.centerIn: parent
-        }
-        onClicked: {
-            driverButton.enabled = false
-            passangerButton.enabled = true
-        }
-    }
-
-    Button {
-        //Пассажир
-        id: passangerButton
-        anchors.top: parent.top
-        anchors.right: parent.right
-        height: parent.height / 10
-        width: parent.width * 0.4
-        anchors.rightMargin: parent.width / 20
-        anchors.topMargin: parent.height / 15
-        Text {
-            anchors.centerIn: parent
-            text: "Пассажир"
-            font.pixelSize: parent.height / 2
-        }
-        onClicked: {
-            driverButton.enabled = true
-            passangerButton.enabled = false
-        }
-    }
-
     ComboBox {
         id: sourceTown
+        objectName: "sourceTowns"
         anchors.left: parent.left
-        anchors.top: driverButton.bottom
+        anchors.top: parent.top
         anchors.topMargin: parent.height / 15
         anchors.leftMargin: parent.width / 20
         height: parent.height / 10
         width: parent.width * 0.4
         model: ListModel {
-            id: model
-            ListElement { text: "Уфа" }
-            ListElement { text: "Сибай" }
-            ListElement { text: "Учалы" }
+        }
+        function append(NewElement)
+        {
+            sourceTown.model.append(NewElement);
         }
     }
 
     ComboBox {
         id: destinationTown
+        objectName: "destinationTowns"
         anchors.right: parent.right
-        anchors.top: passangerButton.bottom
+        anchors.top: parent.top
         anchors.topMargin: parent.height / 15
         anchors.rightMargin: parent.width / 20
         height: parent.height / 10
         width: parent.width * 0.4
-        model: ListModel {
-            id: model1
-            ListElement { text: "Уфа" }
-            ListElement { text: "Сибай" }
-            ListElement { text: "Учалы" }
-        }
+        model: sourceTown.model
     }
 
     ComboBox {
@@ -111,18 +67,8 @@ Rectangle {
         height: parent.height / 10
         font.pixelSize: height / 2.5
         wrapMode: Text.WordWrap
-        text: passangerButton.enabled ? "Сколько свободных мест" : "Сколько мест забронировать"
-    }
-
-    Text {
-        id: iD
-        objectName: "idDD"
-        anchors.bottom: goTable.top
-        anchors.left: goTable.left
-        anchors.right: goTable.right
-        height: goTable.height
-        font.pixelSize: height / 2
-        text: "idDD"
+        property int isDriver: 0
+        text: isDriver == 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
     }
 
     Button {

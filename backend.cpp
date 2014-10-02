@@ -1,4 +1,7 @@
 #include "backend.h"
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 BackEnd::BackEnd(QQuickItem *parent) :
     QQuickItem(parent)
@@ -7,29 +10,23 @@ BackEnd::BackEnd(QQuickItem *parent) :
     mainWindow = engine.rootObjects().value(0);
     helloButton = mainWindow->findChild<QObject*>("helloButton");
     loader = mainWindow->findChild<QObject*>("loader");
-    if(loader)
-        qDebug() <<"success loader";
-    else qDebug() << "failed loader";
 
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     qDebug(settings->value("value1").toString().toUtf8());
-    //IP = "http://localhost";
-    IP = "http://194.58.100.50";
+    IP = "http://localhost";
+    //IP = "http://194.58.100.50";
     if(settings->value("value1").toString() != NULL)
     {
-        qDebug() << "there is data in qsettings";
         loader->setProperty("registered", "true");
     } else {
-        qDebug() << "there is NO data in qsettings";
         loader->setProperty("registered", "false");
     }
     settings->setValue("value1", "26");
     settings->sync();
 }
 
-void BackEnd::registrationInServer(QString HUMAN, QString phone,
-                                   QString name)
+void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     //helloButton->setProperty("enabled", "false");
@@ -47,25 +44,54 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone,
     params.append(phone);
 
     pManager->post(request, params.toUtf8());
-    qDebug() << "registration in server";
+    qDebug() << "registration in server" << HUMAN << " " << phone << " " << name;
 }
 
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
     QString str = QString(reply->readAll());
-    qDebug() << "slot!" << str;
+
     //QSettings settings("settings.ini", QSettings::IniFormat);
     QString stringToSave = str;
 
     //Записываем значение в файл настроек
     settings->setValue("value1", stringToSave);
     settings->sync();
-    //Считываем записанное значение и выводим в лог
-    qDebug(settings->value("value1").toString().toUtf8());
 
 }
 
+void BackEnd::getTowns()
+{
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotTowns(QNetworkReply *)));
+    QString requestAddres(IP + "/towns");
+    QNetworkRequest request(QUrl(requestAddres.toUtf8()));
+    pManager->get(request);
+    qDebug() << "getting list of towns";
+}
+
+void BackEnd::slotGotTowns(QNetworkReply *reply)
+{
+
+    QString JSONtowns(reply->readAll());
+    TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns);
+    QJsonObject jsonObj;
+    QJsonValue jsonVal;
+    QJsonArray jsonArr;
+    jsonArr = jsonDoc.array();
+    for(int  i = 0; i < jsonArr.size(); i ++)
+    {
+        QVariantMap map;
+        //map.insert(jsonArr.at(i).toString().toUtf8());
+        qDebug() << jsonArr.at(i).toString();
+        QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+    }
+
+}
+
+
 void BackEnd::waitingPageButton()
 {
-    qDebug() << "set property.backend";
+    qDebug() << "waiting page Button clicked!";
 }

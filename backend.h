@@ -15,6 +15,7 @@ public:
 
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
     Q_INVOKABLE void waitingPageButton();
+    Q_INVOKABLE void getTowns();
 private:
     QQmlApplicationEngine engine;
     QObject *mainWindow;
@@ -23,6 +24,7 @@ private:
     QObject *iDDD;
     QObject *waitingPageText;
     QObject *loader;
+    QObject *TOWNS;
     QSettings *settings;
     QString IP;
 
@@ -30,6 +32,7 @@ signals:
 
 public slots:
     void slotregistrationInServer(QNetworkReply *);
+    void slotGotTowns(QNetworkReply *reply);
 };
 
 #endif // BACKEND_H

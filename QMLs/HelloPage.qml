@@ -12,7 +12,6 @@ Rectangle {
             id: title
             text: "Найди попутчика"
             color: "white"
-            visible: true
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
@@ -75,6 +74,46 @@ Rectangle {
                 }
     }
 
+    Button {
+        //Водитель
+        id: driverButton
+        anchors.top: title.bottom
+        anchors.left: parent.left
+        height: parent.height / 10
+        width: parent.width * 0.4
+        anchors.leftMargin: parent.width / 20
+        anchors.topMargin: parent.height / 10
+        Text {
+            text: "Водитель"
+            font.pixelSize: parent.height / 2
+            anchors.centerIn: parent
+        }
+        onClicked: {
+            driverButton.enabled = false
+            passangerButton.enabled = true
+        }
+    }
+
+    Button {
+        //Пассажир
+        id: passangerButton
+        anchors.top: title.bottom
+        anchors.right: parent.right
+        height: parent.height / 10
+        width: parent.width * 0.4
+        anchors.rightMargin: parent.width / 20
+        anchors.topMargin: parent.height / 10
+        Text {
+            anchors.centerIn: parent
+            text: "Попутчик"
+            font.pixelSize: parent.height / 2
+        }
+        onClicked: {
+            driverButton.enabled = true
+            passangerButton.enabled = false
+        }
+    }
+
     Text {
         id: plus7
         anchors.top: phoneNumber.top
@@ -94,7 +133,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 20
         height: parent.height / 10
-        property string phone: phoneNumber.text
         opacity: phoneNumber.text.length == 10 ? 1 : 0.8
         Text {
             anchors.fill: parent
@@ -104,8 +142,9 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            //backEnd.registrationInServer("driver", phone, "ilnur");
+            backEnd.registrationInServer(driverButton.enabled ? "passanger" : "driver", phoneNumber.text, humanName.text);
             loader.setSource("qrc:/QMLs/RegPage.qml")
+            backEnd.getTowns();
             toolBarText.text = "Выберите направление"
         }
     }
