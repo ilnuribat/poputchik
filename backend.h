@@ -6,6 +6,10 @@
 #include <QNetworkAccessManager>
 #include <QSettings>
 #include <QtQuick>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonValue>
 
 class BackEnd : public QQuickItem
 {

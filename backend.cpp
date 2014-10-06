@@ -1,7 +1,5 @@
 #include "backend.h"
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
+
 
 BackEnd::BackEnd(QQuickItem *parent) :
     QQuickItem(parent)
@@ -75,19 +73,25 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
 
     QString JSONtowns(reply->readAll());
     TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns);
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns.toUtf8());
     QJsonObject jsonObj;
     QJsonValue jsonVal;
     QJsonArray jsonArr;
     jsonArr = jsonDoc.array();
+    QVariantMap map;
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
-        QVariantMap map;
-        //map.insert(jsonArr.at(i).toString().toUtf8());
+        map.insert("name" + QString(i), jsonArr.at(i).toString().toUtf8());
         qDebug() << jsonArr.at(i).toString();
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
-
+    int iterator = 0;
+    qDebug() << map.size() << " :map, json: " << jsonArr.size();
+    for(QVariantMap::iterator it = map.begin(); it != map.end(); it++)
+    {
+        iterator ++;
+        qDebug() << it.value().toString() << " " << iterator;
+    }
 }
 
 

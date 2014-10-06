@@ -16,10 +16,11 @@ Rectangle {
         width: parent.width * 0.4
         model: ListModel {
         }
-        function append(NewElement)
-        {
-            sourceTown.model.append(NewElement);
-        }
+    }
+
+    function append(NewElement)
+    {
+        sourceTown.model.append(NewElement);
     }
 
     ComboBox {
@@ -31,7 +32,10 @@ Rectangle {
         anchors.rightMargin: parent.width / 20
         height: parent.height / 10
         width: parent.width * 0.4
-        model: sourceTown.model
+        model: ListModel {
+            ListElement {name: "Уфа"}
+            ListElement {name: "Мияки!"}
+        }
     }
 
     ComboBox {
