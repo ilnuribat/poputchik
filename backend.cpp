@@ -1,6 +1,5 @@
 #include "backend.h"
 
-
 BackEnd::BackEnd(QQuickItem *parent) :
     QQuickItem(parent)
 {
@@ -65,7 +64,6 @@ void BackEnd::getTowns()
     QString requestAddres(IP + "/towns");
     QNetworkRequest request(QUrl(requestAddres.toUtf8()));
     pManager->get(request);
-    qDebug() << "getting list of towns";
 }
 
 void BackEnd::slotGotTowns(QNetworkReply *reply)
@@ -81,19 +79,10 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
     QVariantMap map;
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
-        map.insert("name" + QString(i), jsonArr.at(i).toString().toUtf8());
-        qDebug() << jsonArr.at(i).toString();
+        map.insert("text", jsonArr.at(i).toString());
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
-    int iterator = 0;
-    qDebug() << map.size() << " :map, json: " << jsonArr.size();
-    for(QVariantMap::iterator it = map.begin(); it != map.end(); it++)
-    {
-        iterator ++;
-        qDebug() << it.value().toString() << " " << iterator;
-    }
 }
-
 
 void BackEnd::waitingPageButton()
 {

@@ -16,11 +16,11 @@ Rectangle {
         width: parent.width * 0.4
         model: ListModel {
         }
-    }
-
-    function append(NewElement)
-    {
-        sourceTown.model.append(NewElement);
+        function append(newTown)
+        {
+            sourceTown.model.append(newTown);
+            destinationTown.model.append(newTown);
+        }
     }
 
     ComboBox {
@@ -33,8 +33,6 @@ Rectangle {
         height: parent.height / 10
         width: parent.width * 0.4
         model: ListModel {
-            ListElement {name: "Уфа"}
-            ListElement {name: "Мияки!"}
         }
     }
 
@@ -57,6 +55,8 @@ Rectangle {
             ListElement { text: "8" }
         }
     }
+
+
 
     Text {
         //Подпись для количества мест
