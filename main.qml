@@ -39,3 +39,7 @@ ApplicationWindow {
     }
 
 }
+
+/*
+  !0(ked_entr@n(e
+*/

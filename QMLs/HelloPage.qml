@@ -143,9 +143,13 @@ Rectangle {
         }
         onClicked: {
             backEnd.registrationInServer(driverButton.enabled ? "passanger" : "driver", phoneNumber.text, humanName.text);
-            loader.setSource("qrc:/QMLs/RegPage.qml")
+            loader.setSource("qrc:/QMLs/RegPage.qml");
             backEnd.getTowns();
-            toolBarText.text = "Выберите направление"
+            toolBarText.text = "Выберите направление";
+        }
+        function registrationSuccess()
+        {
+            loader.setSource("qrc://QMLs/RegPage.qml");
         }
     }
 }
