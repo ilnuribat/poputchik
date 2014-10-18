@@ -5,6 +5,7 @@
         <file>QMLs/RegPage.qml</file>
         <file>QMLs/TimePage.qml</file>
         <file>QMLs/WaitingPage.qml</file>
+        <file>QMLs/ChosenTime.qml</file>
     </qresource>
     <qresource prefix="/image">
         <file>images/car.png</file>

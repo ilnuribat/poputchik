@@ -42,19 +42,20 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
     params.append(phone);
 
     pManager->post(request, params.toUtf8());
-    qDebug() << "registration in server" << HUMAN << " " << phone << " " << name;
 }
 
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
-    if(QString(reply->readAll()).toInt() == 0)
+    QString strID = QString(reply->readAll());
+    qDebug() << strID << "ID - registration";
+    if(strID.toInt() == 0)
     {//fails in registrations
         qDebug() << "error with registration: " << QString(reply->readAll());
         return ;
     }
 
     //Записываем значение в файл настроек
-    settings->setValue("ID", QString(reply->readAll()));
+    settings->setValue("ID", strID);
     settings->setValue("registerred", "true");
     settings->sync();
     helloButton = mainWindow->findChild<QObject*>("helloButton");
@@ -102,4 +103,12 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
 void BackEnd::waitingPageButton()
 {
     qDebug() << "waiting page Button clicked!";
+}
+
+void BackEnd::standToQueue(int TIME)
+{
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    delete pManager;
+    qDebug() << "standind to Queue: " << TIME;
 }

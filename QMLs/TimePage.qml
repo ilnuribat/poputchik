@@ -51,49 +51,34 @@ Rectangle {
         id: timeModel
         objectName: "TimePageData"
         ListElement {
-
-            passanger: "0"
-            driver: "0"
             time: "00:00 - 03:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
             time: "03:00 - 06:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
             time: "06:00 - 09:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
+
             time: "09:00 - 12:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
             time: "12:00 - 15:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
             time: "15:00 - 18:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
             time: "18:00 - 21:00"
         }
         ListElement {
-            passanger: "0"
-            driver: "0"
             time: "21:00 - 24:00"
         }
     }
 
     ListView {
+        id: listOfTimes
         anchors.top: chooseTimeSegmentTitle.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -101,6 +86,7 @@ Rectangle {
         clip: true
         model: timeModel
         delegate: Rectangle {
+            id: timesDelegate
             height: timeMain.height * 0.15
             width: timeMain.width
             anchors.rightMargin: width
@@ -114,7 +100,7 @@ Rectangle {
                 height: parent.height
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: time
+                text: "time"
                 font.pixelSize: height * 0.3
             }
             Text {
@@ -125,7 +111,7 @@ Rectangle {
                 height: parent.height
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: driver
+                text: "0_0"
                 font.pixelSize: height * 0.3
             }
             Text {
@@ -136,11 +122,22 @@ Rectangle {
                 height: parent.height
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                text: passanger
+                text: "O_O"
                 font.pixelSize: height * 0.3
             }
+            MouseArea {
+                id: timeChoosen
+                anchors.fill: parent
+                onClicked: {
+                    backEnd.standToQueue(index);
+                    for(var i = 0; i < 8; i ++)
+                    {
+                            console.log(
+                    }
+                    timesDelegate.color = "lightgreen";
+                }
+            }
         }
-        snapMode: ListView.SnapOneItem
     }
 
     Button {
@@ -160,7 +157,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            loader.setSource("qrc:/QMLs/WaitingPage.qml")
+            loader.setSource("qrc:/QMLs/ChosenTime.qml")
             toolBarText.text = "Ожидание"
         }
     }

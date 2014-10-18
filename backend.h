@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
     Q_INVOKABLE void waitingPageButton();
     Q_INVOKABLE void getTowns();
+    Q_INVOKABLE void standToQueue(int TIME);
 private:
     QQmlApplicationEngine engine;
     QObject *mainWindow;
