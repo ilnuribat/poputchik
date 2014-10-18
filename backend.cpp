@@ -11,8 +11,8 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     qDebug(settings->value("ID").toString().toUtf8());
-    //IP = "http://localhost";
-    IP = "http://194.58.100.50";
+    IP = "http://localhost";
+    //IP = "http://194.58.100.50";
     if(settings->value("ID").toString() != NULL)
     {
         loader->setProperty("registered", "true");

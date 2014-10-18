@@ -37,7 +37,6 @@ ApplicationWindow {
         focus: true
         source: registered == "true" ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
     }
-
 }
 
 /*
