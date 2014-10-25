@@ -34,6 +34,10 @@ Rectangle {
         width: parent.width * 0.4
         model: ListModel {
         }
+        onCurrentIndexChanged: {
+            console.log(index);
+            backEnd.setDestinationTown(index);
+        }
     }
 
     ComboBox {

@@ -21,6 +21,8 @@ public:
     Q_INVOKABLE void waitingPageButton();
     Q_INVOKABLE void getTowns();
     Q_INVOKABLE void standToQueue(int TIME);
+    Q_INVOKABLE void setDestinationTown(int index);
+
 private:
     QQmlApplicationEngine engine;
     QObject *mainWindow;
@@ -32,6 +34,9 @@ private:
     QObject *TOWNS;
     QSettings *settings;
     QString IP;
+    int timeID;
+    QString townSource, townDestination;
+    int SEATS, BOOKED;
 
 signals:
 

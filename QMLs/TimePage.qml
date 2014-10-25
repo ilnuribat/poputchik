@@ -8,6 +8,7 @@ Rectangle {
     id: timeMain
     color: 'darkgrey'
     Rectangle {
+        //Показывает дату
         id: chooseTimeSegmentTitle
         anchors.top:  parent.top
         height: parent.height / 10
@@ -15,69 +16,43 @@ Rectangle {
         anchors.right: parent.right
         color: "lightblue"
         Text {
-            //Время
-            id: titleTime
-            anchors.top: parent.top
-            anchors.left: parent.left
-            width: parent.width * 0.6
-            height: parent.height
-            font.pixelSize: height / 2
-            color: "black"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            text: "Время"
+            anchors.top: parent.bottom
+
         }
-        Image {
-            id: carImage
-            anchors.left: titleTime.right
-            anchors.top: parent.top
-            width: parent.height * 1.2
-            height: parent.height
-            source: "qrc:/image/images/car50.png"
-        }
-        Image {
-            id: passagerImage
-            anchors.right: parent.right
-            width: parent.height * 1.2
-            anchors.rightMargin: parent.height * 0.2
-            anchors.top: parent.top
-            height: parent.height
-            horizontalAlignment: Image.AlignHCenter
-            source: "qrc:/image/images/human.png"
-        }
+
     }
 
     ListModel {
         id: timeModel
         objectName: "TimePageData"
         ListElement {
-            time: "00:00 - 03:00"
+            time: "00:00"
         }
         ListElement {
-            time: "03:00 - 06:00"
+            time: "03:00"
         }
         ListElement {
-            time: "06:00 - 09:00"
+            time: "06:00"
         }
         ListElement {
 
-            time: "09:00 - 12:00"
+            time: "09:00"
         }
         ListElement {
-            time: "12:00 - 15:00"
+            time: "12:00"
         }
         ListElement {
-            time: "15:00 - 18:00"
+            time: "15:00"
         }
         ListElement {
-            time: "18:00 - 21:00"
+            time: "18:00"
         }
         ListElement {
-            time: "21:00 - 24:00"
+            time: "21:00"
         }
     }
 
-    ListView {
+    GridView {
         id: listOfTimes
         anchors.top: chooseTimeSegmentTitle.bottom
         anchors.left: parent.left
@@ -96,46 +71,25 @@ Rectangle {
                 id: delegateTime
                 anchors.left: parent.left
                 anchors.top: parent.top
-                width: parent.width * 0.6
+                width: parent.width * 0.2
                 height: parent.height
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: "time"
                 font.pixelSize: height * 0.3
             }
-            Text {
-                id: delegateDriver
-                x: delegateTime.width
-                anchors.top: parent.top
-                width: parent.width * 0.1
-                height: parent.height
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "0_0"
-                font.pixelSize: height * 0.3
-            }
-            Text {
-                id: delegatePassanger
-                anchors.left: delegateDriver.right
-                anchors.right: parent.right
-                anchors.top: parent.top
-                height: parent.height
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "O_O"
-                font.pixelSize: height * 0.3
-            }
+            //TODO to be able to change properties of other list elements
             MouseArea {
                 id: timeChoosen
                 anchors.fill: parent
                 onClicked: {
                     backEnd.standToQueue(index);
-                    for(var i = 0; i < 8; i ++)
-                    {
-                            console.log(
-                    }
+                    changeColor();
                     timesDelegate.color = "lightgreen";
                 }
+            }
+            function changeColor(){
+                console.log("function of changing Color of other list elements")
             }
         }
     }

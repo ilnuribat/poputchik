@@ -10,7 +10,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
 
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
-    qDebug(settings->value("ID").toString().toUtf8());
+    qDebug() << settings->value("ID").toString() << "settings.ini -> value";
     IP = "http://localhost";
     //IP = "http://194.58.100.50";
     if(settings->value("ID").toString() != NULL)
@@ -111,4 +111,9 @@ void BackEnd::standToQueue(int TIME)
     QNetworkRequest request;
     delete pManager;
     qDebug() << "standind to Queue: " << TIME;
+}
+
+void BackEnd::setDestinationTown(int index)
+{
+    qDebug() << "index of destination town: " << index;
 }
