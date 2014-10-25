@@ -25,34 +25,8 @@ Rectangle {
         }
     }
 
-    ListModel {
-        id: timeModel
-        objectName: "TimePageData"
-        ListElement {
-            time: "00:00"
-        }
-        ListElement {
-            time: "03:00"
-        }
-        ListElement {
-            time: "06:00"
-        }
-        ListElement {
-
-            time: "09:00"
-        }
-        ListElement {
-            time: "12:00"
-        }
-        ListElement {
-            time: "15:00"
-        }
-        ListElement {
-            time: "18:00"
-        }
-        ListElement {
-            time: "21:00"
-        }
+    Component{
+        id: compTime
     }
 
     GridView {
@@ -62,24 +36,16 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: goToReg.top
         clip: true
-        model: timeModel
+        model: compTime
         delegate: Rectangle {
             id: timesDelegate
             height: timeMain.height * 0.15
-            width: timeMain.width
-            anchors.rightMargin: width
-            anchors.leftMargin: width
-            color: "darkgray"
+            width: timeMain.width * 0.5
+            color: "darkgreen"
             Text {
-                id: delegateTime
-                anchors.left: parent.left
-                anchors.top: parent.top
-                width: parent.width * 0.2
-                height: parent.height
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "time"
-                font.pixelSize: height * 0.3
+                text: text
+                font.pixelSize: parent.height * 0.5
+                color: "white"
             }
             //TODO to be able to change properties of other list elements
             MouseArea {
@@ -88,11 +54,10 @@ Rectangle {
                 onClicked: {
                     backEnd.standToQueue(index);
                     changeColor();
-                    timesDelegate.color = "lightgreen";
+                    //timesDelegate.color = "lightgreen";
                 }
             }
             function changeColor(){
-                console.log("function of changing Color of other list elements")
             }
         }
     }
