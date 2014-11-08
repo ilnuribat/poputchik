@@ -14,6 +14,7 @@ ApplicationWindow {
       make animation of loader
     */
     //TODO using HTTPS
+
     ToolBar {
         id: toolBar
         x: 0
@@ -42,8 +43,7 @@ ApplicationWindow {
         width: parent.width
         property string registered
         focus: true
-        source: "qrc:/QMLs/TimePage.qml"
-            //registered == "true" ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
+        source: registered == "true" ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
     }
 }
 

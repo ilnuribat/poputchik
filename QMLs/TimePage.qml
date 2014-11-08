@@ -2,7 +2,6 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
 
-
 Rectangle {
     anchors.fill: parent
     id: timeMain
@@ -25,41 +24,113 @@ Rectangle {
         }
     }
 
-    Component{
-        id: compTime
+    ListModel {
+        id: timeModel
+        ListElement {
+            time: "00:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "03:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "06:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "09:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "12:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "15:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "18:00"
+            passangers: "01"
+            drivers: "001"
+        }
+        ListElement {
+            time: "22:00"
+            passangers: "01"
+            drivers: "001"
+        }
+    }
+
+    Component {
+        id: timeDelegate
+        Rectangle {
+            width: listOfTimes.cellWidth
+            height: listOfTimes.cellHeight
+            color: "darkgray"
+            Rectangle {
+                id: rectIN
+                anchors.fill: parent
+                anchors.margins: 10
+                color: "lightgray"
+                Text {
+                    id: timeID
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.height / 3
+                    text: time
+                    font.pointSize: 14
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Text {
+                    id: driversID
+                    anchors.top: timeID.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.height / 3
+                    text: drivers
+                    font.pointSize: 14
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+                Text {
+                    id: passangersID
+                    anchors.top: driversID.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    text: passangers
+                    font.pointSize: 14
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: console.log("clicked", index)
+            }
+        }
     }
 
     GridView {
         id: listOfTimes
         anchors.top: chooseTimeSegmentTitle.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
         anchors.bottom: goToReg.top
+        width: parent.width
+
+        cellWidth: width / 2
+        cellHeight: height / 4
         clip: true
-        model: compTime
-        delegate: Rectangle {
-            id: timesDelegate
-            height: timeMain.height * 0.15
-            width: timeMain.width * 0.5
-            color: "darkgreen"
-            Text {
-                text: text
-                font.pixelSize: parent.height * 0.5
-                color: "white"
-            }
-            //TODO to be able to change properties of other list elements
-            MouseArea {
-                id: timeChoosen
-                anchors.fill: parent
-                onClicked: {
-                    backEnd.standToQueue(index);
-                    changeColor();
-                    //timesDelegate.color = "lightgreen";
-                }
-            }
-            function changeColor(){
-            }
-        }
+        model: timeModel
+        delegate: timeDelegate
     }
 
     Button {
@@ -83,7 +154,6 @@ Rectangle {
             toolBarText.text = "Ожидание"
         }
     }
-
     Button {
         id: goToReg
         height: parent.height / 10
@@ -103,5 +173,4 @@ Rectangle {
             toolBarText.text = "Выберите направление"
         }
     }
-
 }

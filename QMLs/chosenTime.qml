@@ -18,6 +18,5 @@ Rectangle {
         color: "black"
         text: "Вы выбрали время от ** до ** часов"
         font.pointSize: 14
-
     }
 }

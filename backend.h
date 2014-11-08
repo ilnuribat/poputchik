@@ -26,18 +26,19 @@ public:
 private:
     QQmlApplicationEngine engine;
     QObject *mainWindow;
-    int ID;
     QObject *helloButton;
     QObject *iDDD;
     QObject *waitingPageText;
     QObject *loader;
     QObject *TOWNS;
     QSettings *settings;
+
+    int ID;
     QString IP;
     int timeID;
     QString townSource, townDestination;
     int SEATS, BOOKED;
-
+    QString HUMAN;
 signals:
 
 public slots:

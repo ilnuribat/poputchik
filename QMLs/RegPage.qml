@@ -35,8 +35,7 @@ Rectangle {
         model: ListModel {
         }
         onCurrentIndexChanged: {
-            console.log(index);
-            backEnd.setDestinationTown(index);
+            //backEnd.setDestinationTown(index);
         }
     }
 
