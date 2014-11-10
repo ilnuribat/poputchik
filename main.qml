@@ -25,6 +25,7 @@ ApplicationWindow {
         //800 / 480 = 5 / 3;
         Text {
             id: toolBarText
+            objectName: "toolBarText"
             text: "Добро пожаловать!"
             anchors.fill: parent
             font.pixelSize: parent.height * 0.5
