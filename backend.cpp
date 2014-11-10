@@ -6,22 +6,26 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     mainWindow = engine.rootObjects().value(0);
 
-    loader = mainWindow->findChild<QObject*>("loader");
+    QObject *loader = mainWindow->findChild<QObject*>("loader");
 
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     qDebug() << settings->value("ID").toString() << "settings.ini -> value";
     IP = "http://localhost";
     //IP = "http://194.58.100.50";
+    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     if(settings->value("ID").toString() != NULL)
     {
         loader->setProperty("registered", "true");
-        settings->setValue("registerred", "true");
+        getTowns();
+        toolBarText->setProperty("text", "Выберите направление");
     } else {
         loader->setProperty("registered", "false");
-        settings->setValue("registerred", "false");
     }
     settings->sync();
+
+    //В случае, если ни одно время не выбрали
+    this->timeID = 0;
 }
 
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
@@ -58,7 +62,7 @@ void BackEnd::slotregistrationInServer(QNetworkReply *reply)
     settings->setValue("ID", strID);
     settings->setValue("registerred", "true");
     settings->sync();
-    helloButton = mainWindow->findChild<QObject*>("helloButton");
+    QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");
     QMetaObject::invokeMethod(helloButton, "registrationSuccess");
 }
 
@@ -82,7 +86,7 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
 
 
     QString JSONtowns(reply->readAll());
-    TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
+    QObject *TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns.toUtf8());
 
     QJsonArray jsonArr;
@@ -116,4 +120,39 @@ void BackEnd::standToQueue(int TIME)
 void BackEnd::setDestinationTown(int index)
 {
     qDebug() << "index of destination town: " << index;
+}
+
+void BackEnd::setTimeQueue(int x)
+{
+    this->timeID = x;
+    qDebug() << this->timeID;
+}
+
+void BackEnd::ChooseTimeLoaded()
+{
+    QObject *chooseTime = mainWindow->findChild<QObject*>("ChooseTime_title");
+    QString str = "Выбрано время:" + QString::number(this->timeID * 3);
+    chooseTime->setProperty("text", str);
+}
+
+void BackEnd::getTimeTable()
+{
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
+    QString requestAddres(IP + "/data?direction=1");
+    QNetworkRequest request(QUrl(requestAddres.toUtf8()));
+    pManager->get(request);
+}
+
+void BackEnd::slotGotTimeTable(QNetworkReply *reply)
+{
+    QString JSONtimes(reply->readAll());
+    //QObject *TIMES = mainWindow->findChild<QObject*>("qTimesModel");
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtimes.toUtf8());
+    QJsonArray jsonArr = jsonDoc.array();
+    qDebug() << jsonArr.size();
+    QVariantMap map;
+    for(int i = 0; i < jsonArr.size(); i ++) {
+        qDebug() << jsonArr.at(i).toString();
+    }
 }

@@ -22,15 +22,20 @@ public:
     Q_INVOKABLE void getTowns();
     Q_INVOKABLE void standToQueue(int TIME);
     Q_INVOKABLE void setDestinationTown(int index);
+    Q_INVOKABLE void setTimeQueue(int x);
+    Q_INVOKABLE void ChooseTimeLoaded();
+    Q_INVOKABLE void getTimeTable();
 
 private:
     QQmlApplicationEngine engine;
     QObject *mainWindow;
+/*
     QObject *helloButton;
     QObject *iDDD;
     QObject *waitingPageText;
     QObject *loader;
     QObject *TOWNS;
+*/
     QSettings *settings;
 
     int ID;
@@ -44,6 +49,7 @@ signals:
 public slots:
     void slotregistrationInServer(QNetworkReply *);
     void slotGotTowns(QNetworkReply *reply);
+    void slotGotTimeTable(QNetworkReply *reply);
 };
 
 #endif // BACKEND_H
