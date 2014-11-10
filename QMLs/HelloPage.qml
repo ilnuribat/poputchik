@@ -90,13 +90,13 @@ Rectangle {
         }
         onClicked: {
             driverButton.enabled = false
-            passangerButton.enabled = true
+            passengerButton.enabled = true
         }
     }
 
     Button {
         //Пассажир
-        id: passangerButton
+        id: passengerButton
         anchors.top: title.bottom
         anchors.right: parent.right
         height: parent.height / 10
@@ -110,7 +110,7 @@ Rectangle {
         }
         onClicked: {
             driverButton.enabled = true
-            passangerButton.enabled = false
+            passengerButton.enabled = false
         }
     }
 
@@ -142,7 +142,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            backEnd.registrationInServer(driverButton.enabled ? "passanger" : "driver", phoneNumber.text, humanName.text);
+            backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver", phoneNumber.text, humanName.text);
             loader.setSource("qrc:/QMLs/RegPage.qml");
             backEnd.getTowns();
             toolBarText.text = "Выберите направление";
