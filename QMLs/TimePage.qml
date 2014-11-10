@@ -26,44 +26,45 @@ Rectangle {
 
     ListModel {
         id: timeModel
+        objectName: "qTimesModel" //Queue model of time segments
         ListElement {
             time: "00:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "03:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "06:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "09:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "12:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "15:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "18:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
         ListElement {
             time: "22:00"
-            passangers: "01"
+            passengers: "01"
             drivers: "001"
         }
     }
@@ -84,7 +85,7 @@ Rectangle {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: parent.height / 3
+                    height: parent.height / 2
                     text: time
                     font.pointSize: 14
                     horizontalAlignment: Text.AlignHCenter
@@ -93,21 +94,21 @@ Rectangle {
                 Text {
                     id: driversID
                     anchors.top: timeID.bottom
+                    anchors.bottom: parent.bottom
                     anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: parent.height / 3
+                    width: parent.width / 2
                     text: drivers
                     font.pointSize: 14
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
                 Text {
-                    id: passangersID
-                    anchors.top: driversID.bottom
+                    id: passengersID
+                    anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
-                    anchors.left: parent.left
+                    anchors.left: driversID.right
                     anchors.right: parent.right
-                    text: passangers
+                    text: passengers
                     font.pointSize: 14
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -115,7 +116,7 @@ Rectangle {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: console.log("clicked", index)
+                onClicked: backEnd.setTimeQueue(index);
             }
         }
     }
@@ -160,7 +161,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.rightMargin: 10
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: parent.height / 30
         anchors.right: goWaiting.left
         Text {
             anchors.centerIn: parent
