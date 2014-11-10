@@ -97,6 +97,7 @@ Rectangle {
         onClicked: {
             loader.setSource("qrc:/QMLs/TimePage.qml")
             toolBarText.text = "Выберите время"
+            backEnd.getTimeTable();
         }
     }
 
