@@ -24,51 +24,6 @@ Rectangle {
         }
     }
 
-    ListModel {
-        id: timeModel
-        objectName: "qTimesModel" //Queue model of time segments
-        ListElement {
-            time: "00:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "03:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "06:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "09:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "12:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "15:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "18:00"
-            passengers: "01"
-            drivers: "001"
-        }
-        ListElement {
-            time: "22:00"
-            passengers: "01"
-            drivers: "001"
-        }
-    }
-
     Component {
         id: timeDelegate
         Rectangle {
@@ -123,23 +78,25 @@ Rectangle {
 
     GridView {
         id: listOfTimes
+        objectName: "timeGrid"
         anchors.top: chooseTimeSegmentTitle.bottom
         anchors.bottom: goToReg.top
         width: parent.width
-
         cellWidth: width / 2
         cellHeight: height / 4
         clip: true
-        model: timeModel
+        model: ListModel {}
         delegate: timeDelegate
+        function append(countOfPassengersDrivers) {
+            listOfTimes.model.append(countOfPassengersDrivers);
+        }
     }
-
     Button {
         id: goWaiting
         anchors.right: parent.right
         width: parent.width * 0.7
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: parent.height / 30
 
         height: parent.height / 10
         //enabled: phoneNumber.text.length == 10 ? true : false

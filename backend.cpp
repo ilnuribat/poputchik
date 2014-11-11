@@ -87,6 +87,7 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
 
     QString JSONtowns(reply->readAll());
     QObject *TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
+    if(!TOWNS) return;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns.toUtf8());
 
     QJsonArray jsonArr;
@@ -102,6 +103,7 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
     settings->endArray();
+    qDebug() << "towns got";
 }
 
 void BackEnd::waitingPageButton()
@@ -139,7 +141,7 @@ void BackEnd::getTimeTable()
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-    QString requestAddres(IP + "/data?direction=1");
+    QString requestAddres(IP + "/data\?direction=2");
     QNetworkRequest request(QUrl(requestAddres.toUtf8()));
     pManager->get(request);
 }
@@ -147,12 +149,26 @@ void BackEnd::getTimeTable()
 void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 {
     QString JSONtimes(reply->readAll());
-    //QObject *TIMES = mainWindow->findChild<QObject*>("qTimesModel");
+    QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
+    if(!TIMES) return;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtimes.toUtf8());
     QJsonArray jsonArr = jsonDoc.array();
-    qDebug() << jsonArr.size();
+    qDebug() << jsonArr.size() << "array size";
     QVariantMap map;
+    int queueArr[16] = {0};
     for(int i = 0; i < jsonArr.size(); i ++) {
-        qDebug() << jsonArr.at(i).toString();
+        queueArr[i] = jsonArr.at(i).toInt();
+    }
+    for(int i = 0; i < 8; i ++)
+    {
+        map.insert("passengers", QString::number(queueArr[i]));
+        map.insert("drivers", QString::number(queueArr[8 + i]));
+
+        QString timeStr = QString(3*i < 10 ? "0" : "") + QString::number(3*i) + ":00";
+        qDebug() << timeStr;
+        map.insert("time", timeStr);
+
+        qDebug() << map;
+        QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
 }
