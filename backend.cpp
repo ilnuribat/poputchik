@@ -11,7 +11,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     qDebug() << settings->value("ID").toString() << "settings.ini -> value";
-    IP = "http://localhost";
+    IP = "http://localhost:8080";
     //IP = "http://194.58.100.50";
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     if(settings->value("ID").toString() != NULL)
