@@ -46,12 +46,20 @@ Rectangle {
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
+                Image {
+                    id: driverICON
+                    source: "qrc:/icons/images/pngFromGoogle/car/ic_directions_car_black_48dp.png"
+                    anchors.top: timeID.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    width: height
+                }
                 Text {
                     id: driversID
                     anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    width: parent.width / 2
+                    anchors.left: driverICON.right
+                    width: parent.width / 3
                     text: drivers
                     font.pointSize: 14
                     horizontalAlignment: Text.AlignHCenter
