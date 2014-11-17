@@ -3,6 +3,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
 import "QMLs"
 
+
 ApplicationWindow {
     visible: true
     width: 480
