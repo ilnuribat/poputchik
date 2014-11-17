@@ -30,5 +30,11 @@
         <file>images/pngFromGoogle/car/ic_directions_car_black_48dp.png</file>
         <file>images/pngFromGoogle/car/ic_directions_car_grey600_48dp.png</file>
         <file>images/pngFromGoogle/car/ic_directions_car_white_48dp.png</file>
+        <file>images/pngFromGoogle/2Person/ic_people_grey600_48dp.png</file>
+        <file>images/pngFromGoogle/2Person/ic_people_black_48dp.png</file>
+        <file>images/pngFromGoogle/2Person/ic_people_outline_black_48dp.png</file>
+        <file>images/pngFromGoogle/2Person/ic_people_outline_grey600_48dp.png</file>
+        <file>images/pngFromGoogle/2Person/ic_people_outline_white_48dp.png</file>
+        <file>images/pngFromGoogle/2Person/ic_people_white_48dp.png</file>
     </qresource>
 </RCC>
