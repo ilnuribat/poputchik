@@ -26,4 +26,9 @@
         <file>images/tableFon.png</file>
         <file>images/tableFon.svg</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>images/pngFromGoogle/car/ic_directions_car_black_48dp.png</file>
+        <file>images/pngFromGoogle/car/ic_directions_car_grey600_48dp.png</file>
+        <file>images/pngFromGoogle/car/ic_directions_car_white_48dp.png</file>
+    </qresource>
 </RCC>
