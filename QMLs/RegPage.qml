@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
+import QtQuick.Dialogs 1.1
 
 Rectangle {
     anchors.fill: parent
@@ -21,6 +22,9 @@ Rectangle {
             sourceTown.model.append(newTown);
             destinationTown.model.append(newTown);
         }
+        onCurrentIndexChanged: {
+            backEnd.setSourceTown(currentIndex + 1);
+        }
     }
 
     ComboBox {
@@ -35,7 +39,7 @@ Rectangle {
         model: ListModel {
         }
         onCurrentIndexChanged: {
-            //backEnd.setDestinationTown(index);
+            backEnd.setDestinationTown(currentIndex + 1);
         }
     }
 
@@ -59,8 +63,6 @@ Rectangle {
         }
     }
 
-
-
     Text {
         //Подпись для количества мест
         id: numberSeatsBooked
@@ -80,6 +82,7 @@ Rectangle {
 
     Button {
         id: goTable
+        objectName: "goToTableButton"
         anchors.right: parent.right
         width: parent.width * 0.7
         anchors.bottom: parent.bottom
@@ -95,9 +98,19 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
+            backEnd.checkDirection();
+            parent.enabled = false;
+        }
+        function failDirection() {
+            parent.enabled = true;
+            console.log("there is no such direction");
+            toolBarText.text = "Увы, пока таких маршрутов нет"
+        }
+        function goToTable() {
+            console.log("go to Table from QML!")
             backEnd.getTimeTable();
-            loader.setSource("qrc:/QMLs/TimePage.qml")
-            toolBarText.text = "Выберите время"
+            loader.setSource("qrc:/QMLs/TimePage.qml");
+            toolBarText.text = "Выберите время";
         }
     }
 
