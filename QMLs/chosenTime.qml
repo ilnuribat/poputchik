@@ -35,6 +35,7 @@ Rectangle {
         anchors.margins: height / 20
         onClicked: {
             loader.setSource("qrc:/QMLs/TimePage.qml")
+            backEnd.getTimeTable();
             toolBarText.text = "Выберите время"
         }
     }
