@@ -27,7 +27,6 @@ BackEnd::BackEnd(QQuickItem *parent) :
     //В случае, если ни одно время не выбрали
     this->timeID = 0;
 }
-
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
@@ -47,7 +46,6 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 
     pManager->post(request, params.toUtf8());
 }
-
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
     QString strID = QString(reply->readAll());
@@ -65,7 +63,6 @@ void BackEnd::slotregistrationInServer(QNetworkReply *reply)
     QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");
     QMetaObject::invokeMethod(helloButton, "registrationSuccess");
 }
-
 void BackEnd::getTowns()
 {
     //check for got towns
@@ -77,7 +74,6 @@ void BackEnd::getTowns()
     QNetworkRequest request(QUrl(requestAddres.toUtf8()));
     pManager->get(request);
 }
-
 void BackEnd::slotGotTowns(QNetworkReply *reply)
 {
     //settings - checking for ready got towns, because it is not
@@ -105,12 +101,10 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
     settings->endArray();
     qDebug() << "towns got";
 }
-
 void BackEnd::waitingPageButton()
 {
     qDebug() << "waiting page Button clicked!";
 }
-
 void BackEnd::standToQueue(int TIME)
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
@@ -118,34 +112,25 @@ void BackEnd::standToQueue(int TIME)
     delete pManager;
     qDebug() << "standind to Queue: " << TIME;
 }
-
-void BackEnd::setDestinationTown(int index)
-{
-    qDebug() << "index of destination town: " << index;
-}
-
 void BackEnd::setTimeQueue(int x)
 {
     this->timeID = x;
     qDebug() << this->timeID;
 }
-
 void BackEnd::ChooseTimeLoaded()
 {
     QObject *chooseTime = mainWindow->findChild<QObject*>("ChooseTime_title");
     QString str = "Выбрано время:" + QString::number(this->timeID * 3);
     chooseTime->setProperty("text", str);
 }
-
 void BackEnd::getTimeTable()
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-    QString requestAddres(IP + "/data\?direction=2");
+    QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID));
     QNetworkRequest request(QUrl(requestAddres.toUtf8()));
     pManager->get(request);
 }
-
 void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 {
     QString JSONtimes(reply->readAll());
@@ -153,7 +138,6 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
     if(!TIMES) return;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtimes.toUtf8());
     QJsonArray jsonArr = jsonDoc.array();
-    qDebug() << jsonArr.size() << "array size";
     QVariantMap map;
     int queueArr[16] = {0};
     for(int i = 0; i < jsonArr.size(); i ++) {
@@ -163,12 +147,48 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
     {
         map.insert("passengers", QString::number(queueArr[i]));
         map.insert("drivers", QString::number(queueArr[8 + i]));
-
         QString timeStr = QString(3*i < 10 ? "0" : "") + QString::number(3*i) + ":00";
-        qDebug() << timeStr;
         map.insert("time", timeStr);
-
-        qDebug() << map;
         QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
+}
+void BackEnd::setDestinationTown(int index)
+{
+    qDebug() << "index of destination town: " << index;
+    this->townDestination = index;
+}
+void BackEnd::setSourceTown(int index)
+{
+    qDebug() << "index of source town: " << index;
+    this->townSource = index;
+}
+void BackEnd::checkDirection()
+{
+  qDebug() << "checking direction";
+  QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+  connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotDirection(QNetworkReply*)));
+  QString  requestAddress(IP + "/direction?source=" + QString::number(this->townSource) + "&destination=" + QString::number(this->townDestination));
+  QNetworkRequest request(QUrl(requestAddress.toUtf8()));
+  pManager->get(request);
+}
+void BackEnd::slotGotDirection(QNetworkReply *reply)
+{
+  QObject *goToTableButton = mainWindow->findChild<QObject*>("goToTableButton");
+  QString directionID = QString(reply->readAll());
+  qDebug() << directionID;
+  if(directionID.size() == 0)
+  {//fails to get direction ID
+    qDebug() << "Fail: getting direction ID";
+    return;
+  }
+  this->directionID = directionID.toInt();
+  if(this->directionID == 0)
+  {//there is no such direction
+      qDebug() << "there is no such direction";
+      QMetaObject::invokeMethod(goToTableButton, "failDirection");
+      return ;
+  }
+
+  //direction found!
+  QMetaObject::invokeMethod(goToTableButton, "goToTable");
 }
