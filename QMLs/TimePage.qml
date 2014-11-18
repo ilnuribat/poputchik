@@ -5,7 +5,7 @@ import QtQuick.Controls.Styles 1.2
 Rectangle {
     anchors.fill: parent
     id: timeMain
-    color: 'darkgrey'
+    color: "#959595"
     Rectangle {
         //Показывает дату
         id: chooseTimeSegmentTitle
@@ -23,18 +23,17 @@ Rectangle {
             color: "black"
         }
     }
-
     Component {
         id: timeDelegate
         Rectangle {
             width: listOfTimes.cellWidth
             height: listOfTimes.cellHeight
-            color: "darkgray"
+            color: timeMain.color
             Rectangle {
                 id: rectIN
                 anchors.fill: parent
                 anchors.margins: 10
-                color: "lightgray"
+                color: index != listOfTimes.highLightIndex ? "#AFAFAF" : "#CECECE"
                 Text {
                     id: timeID
                     anchors.top: parent.top
@@ -59,17 +58,25 @@ Rectangle {
                     anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
                     anchors.left: driverICON.right
-                    width: parent.width / 3
+                    width: parent.width / 4
                     text: drivers
                     font.pointSize: 14
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
+                Image {
+                    id: passengerICON
+                    source: "qrc:/icons/images/pngFromGoogle/2Person/ic_people_black_48dp.png"
+                    anchors.top: timeID.bottom
+                    anchors.bottom: parent.bottom
+                    anchors.left: driversID.right
+                    width: height
+                }
                 Text {
                     id: passengersID
                     anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
-                    anchors.left: driversID.right
+                    anchors.left: passengerICON.right
                     anchors.right: parent.right
                     text: passengers
                     font.pointSize: 14
@@ -79,14 +86,17 @@ Rectangle {
             }
             MouseArea {
                 anchors.fill: parent
-                onClicked: backEnd.setTimeQueue(index);
+                onClicked: {
+                    listOfTimes.highLightIndex = index
+                    backEnd.setTimeQueue(index);
+                }
             }
         }
     }
-
     GridView {
         id: listOfTimes
         objectName: "timeGrid"
+        property int highLightIndex: -1
         anchors.top: chooseTimeSegmentTitle.bottom
         anchors.bottom: goToReg.top
         width: parent.width
@@ -98,16 +108,39 @@ Rectangle {
         function append(countOfPassengersDrivers) {
             listOfTimes.model.append(countOfPassengersDrivers);
         }
+        function clearTimeTable()
+        {
+            listOfTimes.model.clear();
+        }
+    }
+    Button {
+        id: goToReg
+        height: parent.height / 10
+        anchors.left: parent.left
+        anchors.right: goWaiting.left
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: parent.width * 0.01
+        anchors.bottomMargin: parent.height * 0.02
+        anchors.rightMargin: parent.width * 0.01
+        Text {
+            anchors.centerIn: parent
+            font.pixelSize: parent.height / 2
+            text: "Назад"
+        }
+        onClicked: {
+            loader.setSource("qrc:/QMLs/RegPage.qml")
+            backEnd.getTowns()
+            toolBarText.text = "Выберите направление"
+        }
     }
     Button {
         id: goWaiting
         anchors.right: parent.right
         width: parent.width * 0.7
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.height / 30
-
+        anchors.bottomMargin: parent.height * 0.02
+        anchors.rightMargin: parent.width * 0.01
         height: parent.height / 10
-        //enabled: phoneNumber.text.length == 10 ? true : false
         Text {
             anchors.fill: parent
             text: "Далее"
@@ -120,23 +153,5 @@ Rectangle {
             toolBarText.text = "Ожидание"
         }
     }
-    Button {
-        id: goToReg
-        height: parent.height / 10
-        anchors.left: parent.left
-        anchors.rightMargin: 10
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.height / 30
-        anchors.right: goWaiting.left
-        Text {
-            anchors.centerIn: parent
-            font.pixelSize: parent.height / 2
-            text: "Назад"
-        }
-        onClicked: {
-            loader.setSource("qrc:/QMLs/RegPage.qml")
-            backEnd.getTowns()
-            toolBarText.text = "Выберите направление"
-        }
-    }
+
 }
