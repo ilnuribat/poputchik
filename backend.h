@@ -20,13 +20,14 @@ public:
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
     Q_INVOKABLE void waitingPageButton();
     Q_INVOKABLE void getTowns();
-    Q_INVOKABLE void standToQueue(int TIME);
+    Q_INVOKABLE void standToQueue();
     Q_INVOKABLE void setTimeQueue(int x);
     Q_INVOKABLE void ChooseTimeLoaded();
     Q_INVOKABLE void getTimeTable();
     Q_INVOKABLE void setSourceTown(int index);
     Q_INVOKABLE void setDestinationTown(int index);
     Q_INVOKABLE void checkDirection();
+    Q_INVOKABLE void setSeatsBooked(int count);
 
 private:
     QQmlApplicationEngine engine;
@@ -38,6 +39,7 @@ private:
     QString IP;
     int timeID;
     int townSource, townDestination;
+    QString townsSourceStr, townDestinationStr;
     int SEATS, BOOKED;
     int directionID;
     QString HUMAN;
