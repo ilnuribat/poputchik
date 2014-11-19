@@ -40,7 +40,7 @@ private:
     int timeID;
     int townSource, townDestination;
     QString townsSourceStr, townDestinationStr;
-    int SEATS, BOOKED;
+    int SEATS_BOOKED;
     int directionID;
     QString HUMAN;
 signals:
@@ -50,6 +50,7 @@ public slots:
     void slotGotTowns(QNetworkReply *reply);
     void slotGotTimeTable(QNetworkReply *reply);
     void slotGotDirection(QNetworkReply *reply);
+    void slotStandToQueue(QNetworkReply *reply);
 };
 
 #endif // BACKEND_H

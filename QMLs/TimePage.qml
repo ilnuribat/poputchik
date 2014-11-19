@@ -151,6 +151,7 @@ Rectangle {
         onClicked: {
             loader.setSource("qrc:/QMLs/ChosenTime.qml")
             toolBarText.text = "Ожидание"
+            backEnd.standToQueue();
         }
     }
 

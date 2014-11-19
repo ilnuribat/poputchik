@@ -26,7 +26,6 @@ Rectangle {
             backEnd.setSourceTown(currentIndex + 1);
         }
     }
-
     ComboBox {
         id: destinationTown
         objectName: "destinationTowns"
@@ -42,7 +41,6 @@ Rectangle {
             backEnd.setDestinationTown(currentIndex + 1);
         }
     }
-
     ComboBox {
         id: numberSeats
         anchors.right: parent.right
@@ -61,8 +59,11 @@ Rectangle {
             ListElement { text: "7" }
             ListElement { text: "8" }
         }
+        onCurrentIndexChanged: {
+            backEnd.setSeatsBooked(currentIndex + 1);
+            console.log(currentIndex + 1);
+        }
     }
-
     Text {
         //Подпись для количества мест
         id: numberSeatsBooked
@@ -79,7 +80,6 @@ Rectangle {
         property int isDriver: 0
         text: isDriver == 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
     }
-
     Button {
         id: goTable
         objectName: "goToTableButton"
@@ -113,7 +113,6 @@ Rectangle {
             toolBarText.text = "Выберите время";
         }
     }
-
     Button {
         id: goToBack
         height: parent.height / 10

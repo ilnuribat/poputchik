@@ -19,11 +19,13 @@ BackEnd::BackEnd(QQuickItem *parent) :
         loader->setProperty("registered", "true");
         getTowns();
         toolBarText->setProperty("text", "Выберите направление");
+        this->ID = IDFromSettings.toInt();
+        this->HUMAN = settings->value("human").toString();
     } else {
         loader->setProperty("registered", "false");
     }
     settings->sync();
-
+    this->SEATS_BOOKED = 0;
     //В случае, если ни одно время не выбрали
     this->timeID = 0;
 }
@@ -55,10 +57,11 @@ void BackEnd::slotregistrationInServer(QNetworkReply *reply)
         qDebug() << "error with registration: " << QString(reply->readAll());
         return ;
     }
-
+    this->ID = strID.toInt();
     //Записываем значение в файл настроек
     settings->setValue("ID", strID);
     settings->setValue("registerred", "true");
+    settings->setValue("human", this->HUMAN);
     settings->sync();
     QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");
     QMetaObject::invokeMethod(helloButton, "registrationSuccess");
@@ -173,16 +176,28 @@ void BackEnd::slotGotDirection(QNetworkReply *reply)
 void BackEnd::standToQueue()
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
     qDebug() << "standind to Queue:";
     qDebug() << "---" << this->HUMAN;
     qDebug() << "---" << this->ID;
-    qDebug() << "---" << this->SEATS;
+    qDebug() << "---" << this->SEATS_BOOKED;
     qDebug() << "---" << this->directionID;
     qDebug() << "---" << this->timeID;
     qDebug() << "standed to queue";
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
+
+    QString requestAddress(IP + "/q" + this->HUMAN);
+    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
+    QString params("id=");
+    params.append(QString::number(this->ID));
+    params.append("&direction=");
+    params.append(QString::number(this->directionID));
+    params.append("&time=");
+    params.append(QString::number(this->timeID));
+    params.append(this->HUMAN == "driver" ? "&seats=" : "&booked=");
+    params.append(QString::number(this->SEATS_BOOKED));
+    pManager->post(request, params.toUtf8());
 }
 void BackEnd::setSeatsBooked(int count)
 {
-    this->SEATS = count;
+    this->SEATS_BOOKED = count;
 }

@@ -6,7 +6,6 @@ Rectangle {
     anchors.fill: parent
     id: helloPage
     color: 'darkgrey'
-
     Text {
             //Название программы
             id: title
@@ -21,7 +20,6 @@ Rectangle {
             font.pixelSize: height / 2
             horizontalAlignment: Text.AlignHCenter
     }
-
     TextField {
         //Ваше Имя
         id: humanName
@@ -48,7 +46,6 @@ Rectangle {
                     }
                 }
     }
-
     TextField {
         //Ваше Имя
         id: phoneNumber
@@ -73,7 +70,6 @@ Rectangle {
                     }
                 }
     }
-
     Button {
         //Водитель
         id: driverButton
@@ -93,7 +89,6 @@ Rectangle {
             passengerButton.enabled = true
         }
     }
-
     Button {
         //Пассажир
         id: passengerButton
@@ -113,7 +108,6 @@ Rectangle {
             passengerButton.enabled = false
         }
     }
-
     Text {
         id: plus7
         anchors.top: phoneNumber.top
@@ -124,7 +118,6 @@ Rectangle {
         font.pixelSize: height / 2
         text: "+7"
     }
-
     Button {
         id: goNext
         objectName: "helloButton"
