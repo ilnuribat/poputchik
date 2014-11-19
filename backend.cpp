@@ -10,11 +10,11 @@ BackEnd::BackEnd(QQuickItem *parent) :
 
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
-    qDebug() << settings->value("ID").toString() << "settings.ini -> value";
+    QString IDFromSettings = settings->value("ID").toString();
     IP = "http://localhost:8080";
     //IP = "http://194.58.100.50";
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
-    if(settings->value("ID").toString() != NULL)
+    if(IDFromSettings != NULL)
     {
         loader->setProperty("registered", "true");
         getTowns();
@@ -30,9 +30,9 @@ BackEnd::BackEnd(QQuickItem *parent) :
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    //helloButton->setProperty("enabled", "false");
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this,
             SLOT(slotregistrationInServer(QNetworkReply*)));
+    this->HUMAN = HUMAN;
     QString prepareRequest(IP + "/registration");
     QNetworkRequest request(QUrl(prepareRequest.toUtf8()));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -65,9 +65,6 @@ void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 }
 void BackEnd::getTowns()
 {
-    //check for got towns
-    settings->beginReadArray("towns");
-    settings->endArray();
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotTowns(QNetworkReply *)));
     QString requestAddres(IP + "/towns");
@@ -78,7 +75,7 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
 {
     //settings - checking for ready got towns, because it is not
     //good way to download towns again
-    settings->setValue("townsGot", "true");
+    //settings->setValue("townsGot", "true");
 
 
     QString JSONtowns(reply->readAll());
@@ -89,28 +86,21 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
     QJsonArray jsonArr;
     jsonArr = jsonDoc.array();
     QVariantMap map;
-    settings->setValue("countOfTowns", QString::number(jsonArr.size()));
-    settings->beginWriteArray("towns");
+    //settings->setValue("countOfTowns", QString::number(jsonArr.size()));
+    //settings->beginWriteArray("towns");
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
-        settings->setArrayIndex(i);
-        settings->setValue("name", jsonArr.at(i).toString());
+        //settings->setArrayIndex(i);
+        //settings->setValue("name", jsonArr.at(i).toString());
         map.insert("text", jsonArr.at(i).toString());
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
-    settings->endArray();
+    //settings->endArray();
     qDebug() << "towns got";
 }
 void BackEnd::waitingPageButton()
 {
     qDebug() << "waiting page Button clicked!";
-}
-void BackEnd::standToQueue(int TIME)
-{
-    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    QNetworkRequest request;
-    delete pManager;
-    qDebug() << "standind to Queue: " << TIME;
 }
 void BackEnd::setTimeQueue(int x)
 {
@@ -191,4 +181,20 @@ void BackEnd::slotGotDirection(QNetworkReply *reply)
 
   //direction found!
   QMetaObject::invokeMethod(goToTableButton, "goToTable");
+}
+void BackEnd::standToQueue()
+{
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    QNetworkRequest request;
+    qDebug() << "standind to Queue:";
+    qDebug() << "---" << this->HUMAN;
+    qDebug() << "---" << this->ID;
+    qDebug() << "---" << this->SEATS;
+    qDebug() << "---" << this->directionID;
+    qDebug() << "---" << this->timeID;
+    qDebug() << "standed to queue";
+}
+void BackEnd::setSeatsBooked(int count)
+{
+    this->SEATS = count;
 }
