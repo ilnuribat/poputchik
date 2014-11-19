@@ -73,30 +73,18 @@ void BackEnd::getTowns()
 }
 void BackEnd::slotGotTowns(QNetworkReply *reply)
 {
-    //settings - checking for ready got towns, because it is not
-    //good way to download towns again
-    //settings->setValue("townsGot", "true");
-
-
     QString JSONtowns(reply->readAll());
     QObject *TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
     if(!TOWNS) return;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns.toUtf8());
-
     QJsonArray jsonArr;
     jsonArr = jsonDoc.array();
     QVariantMap map;
-    //settings->setValue("countOfTowns", QString::number(jsonArr.size()));
-    //settings->beginWriteArray("towns");
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
-        //settings->setArrayIndex(i);
-        //settings->setValue("name", jsonArr.at(i).toString());
         map.insert("text", jsonArr.at(i).toString());
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
-    //settings->endArray();
-    qDebug() << "towns got";
 }
 void BackEnd::waitingPageButton()
 {
