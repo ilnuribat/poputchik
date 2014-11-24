@@ -201,3 +201,7 @@ void BackEnd::setSeatsBooked(int count)
 {
     this->SEATS_BOOKED = count;
 }
+void BackEnd::slotStandToQueue(QNetworkReply *reply)
+{
+    QString(reply->readAll());
+}
