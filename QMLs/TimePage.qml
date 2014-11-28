@@ -88,7 +88,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked: {
                     listOfTimes.highLightIndex = index
-                    backEnd.setTimeQueue(index);
+                    backEnd.setTimeQueue(index + 1);
                 }
             }
         }

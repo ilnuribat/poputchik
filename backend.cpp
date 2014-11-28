@@ -25,9 +25,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
         loader->setProperty("registered", "false");
     }
     settings->sync();
-    this->SEATS_BOOKED = 0;
     //В случае, если ни одно время не выбрали
-    this->timeID = 0;
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
@@ -89,14 +87,10 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
 }
-void BackEnd::waitingPageButton()
-{
-    qDebug() << "waiting page Button clicked!";
-}
 void BackEnd::setTimeQueue(int x)
 {
     this->timeID = x;
-    qDebug() << this->timeID;
+    qDebug() << "time:" << this->timeID;
 }
 void BackEnd::ChooseTimeLoaded()
 {
@@ -177,12 +171,11 @@ void BackEnd::standToQueue()
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     qDebug() << "standind to Queue:";
-    qDebug() << "---" << this->HUMAN;
-    qDebug() << "---" << this->ID;
-    qDebug() << "---" << this->SEATS_BOOKED;
-    qDebug() << "---" << this->directionID;
-    qDebug() << "---" << this->timeID;
-    qDebug() << "standed to queue";
+    qDebug() << "-HUMAN-" << this->HUMAN;
+    qDebug() << "--ID---" << this->ID;
+    qDebug() << "-SEATS-" << this->SEATS_BOOKED;
+    qDebug() << "direct-" << this->directionID;
+    qDebug() << "--TIME-" << this->timeID;
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
 
     QString requestAddress(IP + "/q" + this->HUMAN);
@@ -200,8 +193,9 @@ void BackEnd::standToQueue()
 void BackEnd::setSeatsBooked(int count)
 {
     this->SEATS_BOOKED = count;
+    qDebug() << "seats: " << this->SEATS_BOOKED;
 }
 void BackEnd::slotStandToQueue(QNetworkReply *reply)
 {
-    QString(reply->readAll());
+    QString str = QString(reply->readAll());
 }

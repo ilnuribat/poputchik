@@ -61,7 +61,6 @@ Rectangle {
         }
         onCurrentIndexChanged: {
             backEnd.setSeatsBooked(currentIndex + 1);
-            console.log(currentIndex + 1);
         }
     }
     Text {
@@ -107,7 +106,6 @@ Rectangle {
             toolBarText.text = "Увы, пока таких маршрутов нет"
         }
         function goToTable() {
-            console.log("go to Table from QML!")
             backEnd.getTimeTable();
             loader.setSource("qrc:/QMLs/TimePage.qml");
             toolBarText.text = "Выберите время";

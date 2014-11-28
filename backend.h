@@ -18,7 +18,6 @@ public:
     explicit BackEnd(QQuickItem *parent = 0);
 
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
-    Q_INVOKABLE void waitingPageButton();
     Q_INVOKABLE void getTowns();
     Q_INVOKABLE void standToQueue();
     Q_INVOKABLE void setTimeQueue(int x);
