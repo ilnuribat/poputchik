@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void setDestinationTown(int index);
     Q_INVOKABLE void checkDirection();
     Q_INVOKABLE void setSeatsBooked(int count);
+    Q_INVOKABLE void getStatus();
 
 private:
     QQmlApplicationEngine engine;
@@ -50,6 +51,7 @@ public slots:
     void slotGotTimeTable(QNetworkReply *reply);
     void slotGotDirection(QNetworkReply *reply);
     void slotStandToQueue(QNetworkReply *reply);
+    void slotGetQueueInfo(QNetworkReply *reply);
 };
 
 #endif // BACKEND_H

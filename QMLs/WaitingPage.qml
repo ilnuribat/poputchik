@@ -1,10 +1,9 @@
-
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
 
-
 Rectangle {
+    id: parentGlobal
     anchors.fill: parent
     color: "#C0C0C0"
 
@@ -101,28 +100,72 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
     }
 
-    Component {
-
-    }
-
     ListView {
-        anchors.top: drivePassTool.bottom
+        id: listNamePhone
         anchors.bottom: goTime.top
+        anchors.top: drivePassTool.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        model{}
-        delegate:{}
+        model: ListModel{}
+        delegate: Rectangle {
+            id: listDelegate
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: parentGlobal.height / 8
+            //Надпись: Имя
+            Rectangle {
+                anchors.left: parent.left
+                anchors.leftMargin: parent.width / 10
+                anchors.right: parent.right
+                anchors.top: parent.top
+                height: parent.height / 2
+                Text{
+                    anchors.fill: parent;
+                    font.pixelSize: 0.8 * height
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    text: name
+                }
+            }
+            //Надпись: Номер
+            Rectangle{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.rightMargin: parent.width / 10
+                anchors.bottom: parent.bottom
+                height: parent.height / 2
+                Text{
+                    anchors.fill: parent;
+                    font.pixelSize: 0.8 * height
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                    text: phone
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: console.log("component clilcked");
+            }
+        }
+        function append(newElement)
+        {
+            listNamePhone.model.append(newElement)
+        }
     }
 
     Button {
         id: goTime
-        anchors.left: parent.left
         anchors.bottom: parent.bottom
         height: parent.height / 10
-        width: parent.width * 0.7
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin:parent.width * 0.01
+        anchors.bottomMargin: parent.height * 0.02
+        anchors.rightMargin: parent.width * 0.01
         Text {
             anchors.fill: parent
-            text: "другое время"
+            text: "Выбрать другое время"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: height / 2
@@ -135,3 +178,4 @@ Rectangle {
         }
     }
 }
+

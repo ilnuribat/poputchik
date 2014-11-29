@@ -198,4 +198,25 @@ void BackEnd::setSeatsBooked(int count)
 void BackEnd::slotStandToQueue(QNetworkReply *reply)
 {
     QString str = QString(reply->readAll());
+    qDebug() << str;
+}
+void BackEnd::getStatus(){
+  //get request to Server. I want to know
+  //all about Queue, I am standing on
+  QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+  connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGetQueueInfo(QNetworkReply*)));
+  QString requestAddress(IP);
+  requestAddress.append("/queueStatus?");
+  requestAddress.append("human=" + this->HUMAN);
+  requestAddress.append("&time=" + QString::number(this->timeID));
+  requestAddress.append("&direction=" + QString::number(this->directionID));
+  requestAddress.append("&id=" + QString::number(this->ID));
+  QNetworkRequest request(QUrl(requestAddress.toUtf8()));
+  pManager->get(request);
+}
+void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
+{
+  qDebug() << "Got info about queue";
+  QString str = QString(reply->readAll());
+  qDebug() << str;
 }

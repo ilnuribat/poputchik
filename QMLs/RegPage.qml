@@ -85,7 +85,8 @@ Rectangle {
         anchors.right: parent.right
         width: parent.width * 0.7
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: parent.height * 0.02
+        anchors.rightMargin: parent.width * 0.01
 
         height: parent.height / 10
         //enabled: phoneNumber.text.length == 10 ? true : false
@@ -103,7 +104,7 @@ Rectangle {
         function failDirection() {
             parent.enabled = true;
             console.log("there is no such direction");
-            toolBarText.text = "Увы, пока таких маршрутов нет"
+            toolBarText.text = "Выберите другой маршрут"
         }
         function goToTable() {
             backEnd.getTimeTable();
@@ -115,9 +116,10 @@ Rectangle {
         id: goToBack
         height: parent.height / 10
         anchors.left: parent.left
-        anchors.rightMargin: 10
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: parent.height * 0.02
+        anchors.rightMargin: parent.width * 0.01
+        anchors.leftMargin: parent.width * 0.01
         anchors.right: goTable.left
         Text {
             anchors.centerIn: parent

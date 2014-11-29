@@ -149,10 +149,10 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            loader.setSource("qrc:/QMLs/ChosenTime.qml")
+            loader.setSource("qrc:/QMLs/WaitingPage.qml")
+            backEnd.getStatus();
             toolBarText.text = "Ожидание"
             backEnd.standToQueue();
         }
     }
-
 }
