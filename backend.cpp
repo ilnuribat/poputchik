@@ -26,6 +26,10 @@ BackEnd::BackEnd(QQuickItem *parent) :
     }
     settings->sync();
     //В случае, если ни одно время не выбрали
+    timer = new QTimer();
+    timer->start(1000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
+    //connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
@@ -84,6 +88,7 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
         map.insert("text", jsonArr.at(i).toString());
+        this->townNames[i] = jsonArr.at(i).toString();
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
 }
@@ -100,11 +105,15 @@ void BackEnd::ChooseTimeLoaded()
 }
 void BackEnd::getTimeTable()
 {
-    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-    QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID));
-    QNetworkRequest request(QUrl(requestAddres.toUtf8()));
-    pManager->get(request);
+  QObject *timeTablePage = mainWindow->findChild<QObject*>("timeTablePage");
+  //Проверяем, находимся ли мы на странице WaitingPage.qml
+  if(!timeTablePage) return;
+  qDebug() << "timeTable called";
+  QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+  connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
+  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID));
+  QNetworkRequest request(QUrl(requestAddres.toUtf8()));
+  pManager->get(request);
 }
 void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 {
@@ -203,6 +212,12 @@ void BackEnd::slotStandToQueue(QNetworkReply *reply)
 void BackEnd::getStatus(){
   //get request to Server. I want to know
   //all about Queue, I am standing on
+  //ONLY FOR WAITING PAGE
+
+  QObject *refreshWaitingPage = mainWindow->findChild<QObject*>("refreshWaitingPage");
+  //Проверяем, находимся ли мы на странице WaitingPage.qml
+  if(!refreshWaitingPage) return;
+
   QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
   connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGetQueueInfo(QNetworkReply*)));
   QString requestAddress(IP);
@@ -216,6 +231,17 @@ void BackEnd::getStatus(){
 }
 void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
 {
+  QObject *refreshWaitingPage = mainWindow->findChild<QObject*>("refreshWaitingPage");
+  //Проверяем, находимся ли мы на странице WaitingPage.qml
+  if(!refreshWaitingPage) return;
+
+  QObject *inQueueText = mainWindow->findChild<QObject*>("inQueueText");
+  QObject *directionText = mainWindow->findChild<QObject*>("directionText");
+  QObject *timeText = mainWindow->findChild<QObject*>("timeText");
+  directionText->setProperty("text", this->townNames[this->townSource - 1] +
+      " - " + this->townNames[this->townDestination - 1]);
+
+
   qDebug() << "Got info about queue";
   QString str = QString(reply->readAll());
   qDebug() << str;

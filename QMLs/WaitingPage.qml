@@ -6,10 +6,10 @@ Rectangle {
     id: parentGlobal
     anchors.fill: parent
     color: "#C0C0C0"
-
     //В очереди, или нет
     Text {
         id: inQueue
+        objectName: "inQueueText"
         anchors.top: parent.top
         anchors.left: parent.left
         height: parent.height / 20
@@ -20,7 +20,6 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
-
     //Надпись направление
     Text {
         id: directionToolText
@@ -36,7 +35,6 @@ Rectangle {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
     }
-
     //Типо: Уфа-Сибай
     Text {
         id: directionText
@@ -52,7 +50,6 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
-
     //надпись "Время"
     Text {
         id: timeToolText
@@ -68,7 +65,6 @@ Rectangle {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
     }
-
     //Надпись 15:00-18:00
     Text {
         id: timeText
@@ -84,7 +80,6 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
-
     //надпись Водитель\Пассажиры:
     Text {
         id: drivePassTool
@@ -99,9 +94,9 @@ Rectangle {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
     }
-
     ListView {
         id: listNamePhone
+        objectName: "listHumans"
         anchors.bottom: goTime.top
         anchors.top: drivePassTool.bottom
         anchors.left: parent.left
@@ -175,6 +170,15 @@ Rectangle {
             loader.setSource("qrc:/QMLs/TimePage.qml")
             backEnd.getTimeTable();
             toolBarText.text = "Выберите время"
+        }
+    }
+    Item {
+        id: refreshITEM
+        objectName: "refreshWaitingPage"
+        function getStatus()
+        {
+            backEnd.getStatus()
+            console.log("get Status called")
         }
     }
 }

@@ -5,6 +5,7 @@ import QtQuick.Controls.Styles 1.2
 Rectangle {
     anchors.fill: parent
     id: timeMain
+    objectName: "timeTablePage"
     color: "#959595"
     Rectangle {
         //Показывает дату
@@ -150,9 +151,9 @@ Rectangle {
         }
         onClicked: {
             loader.setSource("qrc:/QMLs/WaitingPage.qml")
-            backEnd.getStatus();
             toolBarText.text = "Ожидание"
             backEnd.standToQueue();
+            backEnd.getStatus();
         }
     }
 }

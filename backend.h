@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <vector>
 
 class BackEnd : public QQuickItem
 {
@@ -34,7 +35,7 @@ private:
     QObject *mainWindow;
     QSettings *settings;
     void getDirection();
-
+    QTimer *timer;
     int ID;
     QString IP;
     int timeID;
@@ -43,6 +44,8 @@ private:
     int SEATS_BOOKED;
     int directionID;
     QString HUMAN;
+    QString townNames[100];
+
 signals:
 
 public slots:
@@ -52,6 +55,13 @@ public slots:
     void slotGotDirection(QNetworkReply *reply);
     void slotStandToQueue(QNetworkReply *reply);
     void slotGetQueueInfo(QNetworkReply *reply);
+
+    //Она нам нужна,чтобы таймер выполнял после таймаута.
+    //Данная функция просто выполняет getStatus()
+    void getQueueInfo(){getStatus();}
+
+    void getTimeTableTimer(){getTimeTable();}
+
 };
 
 #endif // BACKEND_H
