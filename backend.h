@@ -37,6 +37,7 @@ private:
     void getDirection();
     QTimer *timer;
     int ID;
+    int date;
     QString IP;
     int timeID;
     int townSource, townDestination;

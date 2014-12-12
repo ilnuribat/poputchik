@@ -93,8 +93,6 @@ Rectangle {
         }
     }
 
-
-
     Button {
         id: goTable
         objectName: "goToTableButton"

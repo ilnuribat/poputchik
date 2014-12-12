@@ -30,6 +30,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
     timer->start(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
     //connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
+    this->date = 1;
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
@@ -105,13 +106,11 @@ void BackEnd::ChooseTimeLoaded()
 }
 void BackEnd::getTimeTable()
 {
-  QObject *timeTablePage = mainWindow->findChild<QObject*>("timeTablePage");
   //Проверяем, находимся ли мы на странице WaitingPage.qml
-  if(!timeTablePage) return;
   qDebug() << "timeTable called";
   QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
   connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID));
+  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date = 1");
   QNetworkRequest request(QUrl(requestAddres.toUtf8()));
   pManager->get(request);
 }
@@ -185,6 +184,7 @@ void BackEnd::standToQueue()
     qDebug() << "-SEATS-" << this->SEATS_BOOKED;
     qDebug() << "direct-" << this->directionID;
     qDebug() << "--TIME-" << this->timeID;
+    qDebug() << "--DATE-" << this->date;
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
 
     QString requestAddress(IP + "/q" + this->HUMAN);
@@ -197,6 +197,8 @@ void BackEnd::standToQueue()
     params.append(QString::number(this->timeID));
     params.append(this->HUMAN == "driver" ? "&seats=" : "&booked=");
     params.append(QString::number(this->SEATS_BOOKED));
+    params.append("&date=");
+    params.append(QString::number(this->date));
     pManager->post(request, params.toUtf8());
 }
 void BackEnd::setSeatsBooked(int count)
