@@ -1,7 +1,7 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.1
+import QtQuick 2.2
+import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
-import QtQuick.Dialogs 1.1
+import QtQuick.Dialogs 1.2
 
 Rectangle {
     anchors.fill: parent
@@ -79,6 +79,22 @@ Rectangle {
         property int isDriver: 0
         text: isDriver == 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
     }
+    Rectangle{
+        anchors.top: numberSeats.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: goTable.top
+        color: parent.color
+
+        Calendar {
+            anchors.centerIn: parent
+            height: 0.8 * Math.min(parent.height, parent.width);
+            width: height
+        }
+    }
+
+
+
     Button {
         id: goTable
         objectName: "goToTableButton"
