@@ -6,19 +6,24 @@ Rectangle {
     anchors.fill: parent
     id: helloPage
     color: 'darkgrey'
-    Text {
+    Rectangle {
             //Название программы
             id: title
-            text: "Найди попутчика"
-            color: "white"
+
+            color: parent.color
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: parent.height / 10
-            width: parent.width
-            height: parent.height / 8
-            font.pixelSize: height / 2
-            horizontalAlignment: Text.AlignHCenter
+            anchors.topMargin: parent.height / 40
+            height: parent.height / 15
+            Text {
+                anchors.fill: parent
+                text: "Мы Вас не знаем..."
+                font.pixelSize: height
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                color: "white"
+            }
     }
     TextField {
         //Ваше Имя
@@ -36,7 +41,7 @@ Rectangle {
         placeholderText: "Ваше имя"
 
         validator: RegExpValidator {
-                    regExp: /[а-яА-Яa-zA-Z]{16}/
+                    regExp: /[а-яА-Яa-zA-Z]{10}/
                 }
         Keys.onPressed: {
                     if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
@@ -47,7 +52,7 @@ Rectangle {
                 }
     }
     TextField {
-        //Ваше Имя
+        //Ваш номер
         id: phoneNumber
         objectName: "PHONE"
         anchors.left: parent.left
@@ -70,43 +75,54 @@ Rectangle {
                     }
                 }
     }
-    Button {
-        //Водитель
-        id: driverButton
-        anchors.top: title.bottom
-        anchors.left: parent.left
-        height: parent.height / 10
-        width: parent.width * 0.4
-        anchors.leftMargin: parent.width / 20
-        anchors.topMargin: parent.height / 10
-        Text {
-            text: "Водитель"
-            font.pixelSize: parent.height / 2
-            anchors.centerIn: parent
-        }
-        onClicked: {
-            driverButton.enabled = false
-            passengerButton.enabled = true
-        }
-    }
-    Button {
+    Rectangle {
         //Пассажир
         id: passengerButton
-        anchors.top: title.bottom
-        anchors.right: parent.right
-        height: parent.height / 10
-        width: parent.width * 0.4
-        anchors.rightMargin: parent.width / 20
-        anchors.topMargin: parent.height / 10
         Text {
             anchors.centerIn: parent
             text: "Попутчик"
             font.pixelSize: parent.height / 2
         }
-        onClicked: {
-            driverButton.enabled = true
-            passengerButton.enabled = false
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                driverButton.enabled = true
+                passengerButton.enabled = false
+            }
         }
+        anchors.bottom: humanName.top
+        anchors.left: parent.left
+        height: parent.height / 10
+        width: parent.width * 0.4
+        anchors.leftMargin: parent.width / 20
+        anchors.bottomMargin: parent.height / 10
+        color: enabled ? parent.color : "white"
+
+    }
+    Rectangle {
+
+        //Водитель
+        id: driverButton
+        Text {
+            text: "Водитель"
+            font.pixelSize: parent.height / 2
+            anchors.centerIn: parent
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                driverButton.enabled = false
+                passengerButton.enabled = true
+            }
+        }
+        anchors.bottom: humanName.top
+        anchors.right: parent.right
+        height: parent.height / 10
+        width: parent.width * 0.4
+        anchors.rightMargin: parent.width / 20
+        anchors.bottomMargin: parent.height / 10
+        color: enabled ? parent.color : "white"
+
     }
     Text {
         id: plus7
