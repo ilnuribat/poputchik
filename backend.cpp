@@ -110,13 +110,14 @@ void BackEnd::getTimeTable()
   qDebug() << "timeTable called";
   QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
   connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date = 1");
+  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date=" + QString::number(1));
   QNetworkRequest request(QUrl(requestAddres.toUtf8()));
   pManager->get(request);
 }
 void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 {
     QString JSONtimes(reply->readAll());
+    qDebug() << JSONtimes;
     QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
     if(!TIMES) return;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtimes.toUtf8());
@@ -128,8 +129,9 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
     }
     for(int i = 0; i < 8; i ++)
     {
-        map.insert("passengers", QString::number(queueArr[i]));
-        map.insert("drivers", QString::number(queueArr[8 + i]));
+        map.insert("drivers", QString::number(queueArr[i]));
+        map.insert("passengers", QString::number(queueArr[8 + i]));
+
         QString timeStr = QString(3*i < 10 ? "0" : "") + QString::number(3*i) + ":00";
         map.insert("time", timeStr);
         QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
