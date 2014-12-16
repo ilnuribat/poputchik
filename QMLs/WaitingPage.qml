@@ -99,6 +99,7 @@ Rectangle {
         objectName: "listHumans"
         anchors.bottom: goTime.top
         anchors.top: drivePassTool.bottom
+        anchors.topMargin: parent.height * 0.01
         anchors.left: parent.left
         anchors.right: parent.right
         model: ListModel{}

@@ -151,14 +151,16 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver", phoneNumber.text, humanName.text);
+            backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
+                                                                phoneNumber.text, humanName.text);
+        }
+        function registrationSuccess() {
             loader.setSource("qrc:/QMLs/RegPage.qml");
             backEnd.getTowns();
             toolBarText.text = "Выберите направление";
         }
-        function registrationSuccess()
-        {
-            loader.setSource("qrc://QMLs/RegPage.qml");
+        function failRegistration() {
+            toolBarText.text = "Какая-то ошибка"
         }
     }
 }

@@ -18,34 +18,50 @@ class BackEnd : public QQuickItem
 public:
     explicit BackEnd(QQuickItem *parent = 0);
 
-    Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
-    Q_INVOKABLE void getTowns();
-    Q_INVOKABLE void standToQueue();
-    Q_INVOKABLE void setTimeQueue(int x);
-    Q_INVOKABLE void ChooseTimeLoaded();
-    Q_INVOKABLE void getTimeTable();
-    Q_INVOKABLE void setSourceTown(int index);
-    Q_INVOKABLE void setDestinationTown(int index);
-    Q_INVOKABLE void checkDirection();
-    Q_INVOKABLE void setSeatsBooked(int count);
-    Q_INVOKABLE void getStatus();
+  Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
+  Q_INVOKABLE void getTowns();
+  Q_INVOKABLE void standToQueue();
+  Q_INVOKABLE void setTimeQueue(int x);
+  Q_INVOKABLE void ChooseTimeLoaded();
+  Q_INVOKABLE void getTimeTable();
+  Q_INVOKABLE void setSourceTown(int index);
+  Q_INVOKABLE void setDestinationTown(int index);
+  Q_INVOKABLE void checkDirection();
+  Q_INVOKABLE void setSeatsBooked(int count);
+  Q_INVOKABLE void getStatus();
+  Q_INVOKABLE void setDate(QDate DATE);
 
 private:
-    QQmlApplicationEngine engine;
-    QObject *mainWindow;
-    QSettings *settings;
-    void getDirection();
-    QTimer *timer;
-    int ID;
-    int date;
-    QString IP;
-    int timeID;
-    int townSource, townDestination;
-    QString townsSourceStr, townDestinationStr;
-    int SEATS_BOOKED;
-    int directionID;
-    QString HUMAN;
-    QString townNames[100];
+  //Движок QML
+  QQmlApplicationEngine engine;
+  //Ссылка на главное окно в QML
+  QObject *mainWindow;
+  //Для работы с конфигурационными файлами
+  QSettings *settings;
+  //Таймер, для обновления страниц и так далее
+  QTimer *timer;
+  //Идентификатор юзера в сервере
+  int ID;
+  //Сколько дней прошло с Начальной даты(STARTDATE)
+  int DATE;
+  //IP адрес нашего сервера. Достану из конфиг файлов для тестирования
+  QString IP;
+  //Идентификатор временного промежутка
+  int timeID;
+  //Идентификаторы начального и конечного городов
+  int townSource, townDestination;
+  //Строковые переменные городов(начальной и конечной точек).
+  QString townsSourceStr, townDestinationStr;
+  //Количество свободных мест/забронированных мест
+  int SEATS_BOOKED;
+  //Идентификатор Направления. Определяется сервером
+  int directionID;
+  //Пассажир или Водитель
+  QString HUMAN;
+  //список городов
+  QString townNames[100];
+  //Стартовая дата, именно с этой даты будем считать, сколько дней прошло.
+  QDate STARTDATE;
 
 signals:
 

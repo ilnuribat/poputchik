@@ -12,6 +12,9 @@ BackEnd::BackEnd(QQuickItem *parent) :
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     QString IDFromSettings = settings->value("ID").toString();
     IP = "http://localhost:8080";
+    if(settings->value("IP").toString() != NULL)
+      this->IP = settings->value("IP").toString();
+    qDebug() << this->IP;
     //IP = "http://194.58.100.50";
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     if(IDFromSettings != NULL)
@@ -30,7 +33,9 @@ BackEnd::BackEnd(QQuickItem *parent) :
     timer->start(1000);
     connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
     //connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
-    this->date = 1;
+    //Это - стартовая точка. С этого дня будем считать все даты.
+    this->STARTDATE.setDate(2014, 12, 15);
+    this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
@@ -53,11 +58,16 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 }
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
+
     QString strID = QString(reply->readAll());
     qDebug() << strID << "ID - registration";
-    if(strID.toInt() == 0)
+    QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");
+    if(!helloButton) return;
+
+    if(strID.toInt() == 0 || strID.size() == 0)
     {//fails in registrations
         qDebug() << "error with registration: " << QString(reply->readAll());
+        QMetaObject::invokeMethod(helloButton, "failRegistration");
         return ;
     }
     this->ID = strID.toInt();
@@ -66,7 +76,7 @@ void BackEnd::slotregistrationInServer(QNetworkReply *reply)
     settings->setValue("registerred", "true");
     settings->setValue("human", this->HUMAN);
     settings->sync();
-    QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");
+
     QMetaObject::invokeMethod(helloButton, "registrationSuccess");
 }
 void BackEnd::getTowns()
@@ -96,7 +106,6 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
 void BackEnd::setTimeQueue(int x)
 {
     this->timeID = x;
-    qDebug() << "time:" << this->timeID;
 }
 void BackEnd::ChooseTimeLoaded()
 {
@@ -139,12 +148,10 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 }
 void BackEnd::setDestinationTown(int index)
 {
-    qDebug() << "index of destination town: " << index;
     this->townDestination = index;
 }
 void BackEnd::setSourceTown(int index)
 {
-    qDebug() << "index of source town: " << index;
     this->townSource = index;
 }
 void BackEnd::checkDirection()
@@ -186,27 +193,22 @@ void BackEnd::standToQueue()
     qDebug() << "-SEATS-" << this->SEATS_BOOKED;
     qDebug() << "direct-" << this->directionID;
     qDebug() << "--TIME-" << this->timeID;
-    qDebug() << "--DATE-" << this->date;
+    qDebug() << "--DATE-" << this->DATE;
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
 
     QString requestAddress(IP + "/q" + this->HUMAN);
     QNetworkRequest request(QUrl(requestAddress.toUtf8()));
-    QString params("id=");
-    params.append(QString::number(this->ID));
-    params.append("&direction=");
-    params.append(QString::number(this->directionID));
-    params.append("&time=");
-    params.append(QString::number(this->timeID));
+    QString params("id=" + QString::number(this->ID));
+    params.append("&direction=" + QString::number(this->directionID));
+    params.append("&time=" + QString::number(this->timeID));
     params.append(this->HUMAN == "driver" ? "&seats=" : "&booked=");
     params.append(QString::number(this->SEATS_BOOKED));
-    params.append("&date=");
-    params.append(QString::number(this->date));
+    params.append("&date=" + QString::number(this->DATE));
     pManager->post(request, params.toUtf8());
 }
 void BackEnd::setSeatsBooked(int count)
 {
     this->SEATS_BOOKED = count;
-    qDebug() << "seats: " << this->SEATS_BOOKED;
 }
 void BackEnd::slotStandToQueue(QNetworkReply *reply)
 {
@@ -230,6 +232,7 @@ void BackEnd::getStatus(){
   requestAddress.append("&time=" + QString::number(this->timeID));
   requestAddress.append("&direction=" + QString::number(this->directionID));
   requestAddress.append("&id=" + QString::number(this->ID));
+  requestAddress.append("&date=" + QString::number(this->DATE));
   QNetworkRequest request(QUrl(requestAddress.toUtf8()));
   pManager->get(request);
 }
@@ -263,4 +266,8 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
       map.insert("phone", human.at(1));
       QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
   }
+}
+void BackEnd::setDate(QDate date)
+{
+  this->DATE = - date.daysTo(this->STARTDATE);
 }

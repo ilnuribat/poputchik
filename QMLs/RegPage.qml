@@ -90,6 +90,9 @@ Rectangle {
             anchors.centerIn: parent
             height: 0.8 * Math.min(parent.height, parent.width);
             width: height
+            onClicked: {
+                backEnd.setDate(date);
+            }
         }
     }
 
