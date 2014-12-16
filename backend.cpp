@@ -242,11 +242,25 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
   QObject *inQueueText = mainWindow->findChild<QObject*>("inQueueText");
   QObject *directionText = mainWindow->findChild<QObject*>("directionText");
   QObject *timeText = mainWindow->findChild<QObject*>("timeText");
+  QObject *drivePassTool = mainWindow->findChild<QObject*>("drivePassTool");
+  QObject *listHumans = mainWindow->findChild<QObject*>("listHumans");
+  drivePassTool->setProperty("text", this->HUMAN == "driver" ? "Пассажиры:" : "Водитель");
   directionText->setProperty("text", this->townNames[this->townSource - 1] +
       " - " + this->townNames[this->townDestination - 1]);
-
-
-  qDebug() << "Got info about queue";
+  timeText->setProperty("text", QString(3 * (this->timeID - 1) < 10 ? "0" : "") +
+                        QString::number(3 * (this->timeID - 1)) + ":00 - " +
+                        QString(3 * this->timeID < 10 ? "0" : "") +
+                        QString::number(3 * this->timeID) + ":00");
+  QMetaObject::invokeMethod(listHumans, "clearList");
   QString str = QString(reply->readAll());
-  qDebug() << str;
+  QStringList people = str.split('.');
+  inQueueText->setProperty("text", people.at(0));
+  QVariantMap map;
+  for(int i = 1; i < people.size(); i ++)
+  {
+      QStringList human = people.at(i).split(',');
+      map.insert("name", human.at(0));
+      map.insert("phone", human.at(1));
+      QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+  }
 }

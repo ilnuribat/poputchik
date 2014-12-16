@@ -107,8 +107,10 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
             height: parentGlobal.height / 8
+            color: parentGlobal.color
             //Надпись: Имя
             Rectangle {
+                color: parent.color
                 anchors.left: parent.left
                 anchors.leftMargin: parent.width / 10
                 anchors.right: parent.right
@@ -124,6 +126,7 @@ Rectangle {
             }
             //Надпись: Номер
             Rectangle{
+                color: parent.color
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.rightMargin: parent.width / 10
@@ -137,15 +140,17 @@ Rectangle {
                     text: phone
                 }
             }
-
             MouseArea {
                 anchors.fill: parent
                 onClicked: console.log("component clilcked");
             }
         }
-        function append(newElement)
-        {
+        function append(newElement){
             listNamePhone.model.append(newElement)
+        }
+        function clearList()
+        {
+            listNamePhone.model.clear();
         }
     }
 
@@ -178,7 +183,6 @@ Rectangle {
         function getStatus()
         {
             backEnd.getStatus()
-            console.log("get Status called")
         }
     }
 }
