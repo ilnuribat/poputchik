@@ -134,7 +134,7 @@ Rectangle {
         font.pixelSize: height / 2
         text: "+7"
     }
-    Button {
+    Rectangle {
         id: goNext
         objectName: "helloButton"
         anchors.right: parent.right
@@ -150,9 +150,12 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
-        onClicked: {
-            backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
-                                                                phoneNumber.text, humanName.text);
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
+                                                                    phoneNumber.text, humanName.text);
+            }
         }
         function registrationSuccess() {
             loader.setSource("qrc:/QMLs/RegPage.qml");

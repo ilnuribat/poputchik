@@ -11,11 +11,13 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     QString IDFromSettings = settings->value("ID").toString();
-    IP = "http://localhost:8080";
+    //IP = "http://localhost:8080";
+    this->IP = "http://10.10.14.140:8080";
+    //this->IP = "http://194.58.100.50";
     if(settings->value("IP").toString() != NULL)
       this->IP = settings->value("IP").toString();
     qDebug() << this->IP;
-    //IP = "http://194.58.100.50";
+
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     if(IDFromSettings != NULL)
     {
@@ -53,7 +55,6 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
     params.append(name);
     params.append("&phone=");
     params.append(phone);
-
     pManager->post(request, params.toUtf8());
 }
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
@@ -119,7 +120,7 @@ void BackEnd::getTimeTable()
   qDebug() << "timeTable called";
   QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
   connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date=" + QString::number(1));
+  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date=" + QString::number(this->DATE));
   QNetworkRequest request(QUrl(requestAddres.toUtf8()));
   pManager->get(request);
 }
@@ -187,15 +188,7 @@ void BackEnd::slotGotDirection(QNetworkReply *reply)
 void BackEnd::standToQueue()
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    qDebug() << "standind to Queue:";
-    qDebug() << "-HUMAN-" << this->HUMAN;
-    qDebug() << "--ID---" << this->ID;
-    qDebug() << "-SEATS-" << this->SEATS_BOOKED;
-    qDebug() << "direct-" << this->directionID;
-    qDebug() << "--TIME-" << this->timeID;
-    qDebug() << "--DATE-" << this->DATE;
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
-
     QString requestAddress(IP + "/q" + this->HUMAN);
     QNetworkRequest request(QUrl(requestAddress.toUtf8()));
     QString params("id=" + QString::number(this->ID));
@@ -204,6 +197,7 @@ void BackEnd::standToQueue()
     params.append(this->HUMAN == "driver" ? "&seats=" : "&booked=");
     params.append(QString::number(this->SEATS_BOOKED));
     params.append("&date=" + QString::number(this->DATE));
+    qDebug() << params;
     pManager->post(request, params.toUtf8());
 }
 void BackEnd::setSeatsBooked(int count)
