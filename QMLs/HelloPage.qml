@@ -153,6 +153,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
+
                 backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
                                                                     phoneNumber.text, humanName.text);
             }

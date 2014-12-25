@@ -12,21 +12,30 @@ BackEnd::BackEnd(QQuickItem *parent) :
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     QString IDFromSettings = settings->value("ID").toString();
     //IP = "http://localhost:8080";
-    this->IP = "http://10.10.14.140:8080";
+    this->IP = "http://10.10.14.141:8080";
     //this->IP = "http://194.58.100.50";
     if(settings->value("IP").toString() != NULL)
       this->IP = settings->value("IP").toString();
     qDebug() << this->IP;
 
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
+
+    if(loader) qDebug() << "imitation: setting loading to true";
+        //loader->setProperty("loadig", "true");
+    else qDebug() << "Error, loader not found";
+
     if(IDFromSettings != NULL)
     {
         loader->setProperty("registered", "true");
+        QString regPageQML = "qrc:/QMLs/RegPage.qml";
+        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
         getTowns();
         toolBarText->setProperty("text", "Выберите направление");
         this->ID = IDFromSettings.toInt();
         this->HUMAN = settings->value("human").toString();
     } else {
+        QString regPageQML = "qrc:/QMLs/HelloPage.qml";
+        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
         loader->setProperty("registered", "false");
     }
     settings->sync();
@@ -49,12 +58,9 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
     QNetworkRequest request(QUrl(prepareRequest.toUtf8()));
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       "application/x-www-form-urlencoded");
-    QString params("human=");
-    params.append(HUMAN);
-    params.append("&name=");
-    params.append(name);
-    params.append("&phone=");
-    params.append(phone);
+    QString params("human=" + this->HUMAN);
+    params.append("&name=" + name);
+    params.append("&phone=" + phone);
     pManager->post(request, params.toUtf8());
 }
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
@@ -157,18 +163,21 @@ void BackEnd::setSourceTown(int index)
 }
 void BackEnd::checkDirection()
 {
-  qDebug() << "checking direction";
-  QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-  connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotDirection(QNetworkReply*)));
-  QString  requestAddress(IP + "/direction?source=" + QString::number(this->townSource) + "&destination=" + QString::number(this->townDestination));
-  QNetworkRequest request(QUrl(requestAddress.toUtf8()));
-  pManager->get(request);
+    QObject *loader = this->mainWindow->findChild<QObject*>("loader");
+    if(loader) qDebug() << "imitation: setting loading to true";
+        //loader->setProperty("loadig", "true");
+    else qDebug() << "Error, loader not found";
+
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotDirection(QNetworkReply*)));
+    QString  requestAddress(IP + "/direction?source=" + QString::number(this->townSource) + "&destination=" + QString::number(this->townDestination));
+    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
+    pManager->get(request);
 }
 void BackEnd::slotGotDirection(QNetworkReply *reply)
 {
   QObject *goToTableButton = mainWindow->findChild<QObject*>("goToTableButton");
   QString directionID = QString(reply->readAll());
-  qDebug() << directionID;
   if(directionID.size() == 0)
   {//fails to get direction ID
     qDebug() << "Fail: getting direction ID";

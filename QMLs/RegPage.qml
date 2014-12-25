@@ -106,7 +106,7 @@ Rectangle {
         anchors.rightMargin: parent.width * 0.01
 
         height: parent.height / 10
-        //enabled: phoneNumber.text.length == 10 ? true : false
+
         Text {
             anchors.fill: parent
             text: "Далее"
@@ -116,6 +116,7 @@ Rectangle {
         }
         onClicked: {
             backEnd.checkDirection();
+            //Вот это нежданчик. Я вроде это не писал
             parent.enabled = false;
         }
         function failDirection() {

@@ -39,13 +39,40 @@ ApplicationWindow {
     Loader {
         id: loader
         objectName: "loader"
+        visible: status == Loader.Ready
         x: 0
         y: toolBar.y + toolBar.height
         height: parent.height - y
         width: parent.width
         property string registered
+        property bool loadig: true
         focus: true
-        source: registered == "true" ? "qrc:/QMLs/RegPage.qml" : "qrc:/QMLs/HelloPage.qml"
+        source: "qrc:/QMLs/StartPage.qml"
+
+
+        function setQML(QML)
+        {
+            loader.setSource(QML);
+        }
+
+        onLoaded: {
+            console.log("new qml page loaded", loader.source);
+        }
+        onStatusChanged: console.log("status", status,  "item", item)
+
+        Rectangle {
+            id: loadingAnimation
+            color: "lightgreen"
+            opacity: 0.5
+            anchors.fill: parent
+            visible: true
+            Text {
+                anchors.centerIn: parent
+                font.pixelSize: 20
+                text: "Загрузка"
+            }
+        }
+
     }
 }
 
