@@ -131,9 +131,7 @@ Rectangle {
             text: "Назад"
         }
         onClicked: {
-            loader.setSource("qrc:/QMLs/RegPage.qml")
-            backEnd.getTowns()
-            toolBarText.text = "Выберите направление"
+            backEnd.loadingRegPage();
         }
     }
     Button {

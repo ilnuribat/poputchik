@@ -97,8 +97,8 @@ Rectangle {
         width: parent.width * 0.4
         anchors.leftMargin: parent.width / 20
         anchors.bottomMargin: parent.height / 10
+        enabled: false
         color: enabled ? parent.color : "white"
-
     }
     Rectangle {
 
@@ -122,6 +122,7 @@ Rectangle {
         width: parent.width * 0.4
         anchors.rightMargin: parent.width / 20
         anchors.bottomMargin: parent.height / 10
+        enabled: true
         color: enabled ? parent.color : "white"
 
     }
@@ -159,10 +160,9 @@ Rectangle {
                                                                     "8" + phoneNumber.text, humanName.text);
             }
         }
+
         function registrationSuccess() {
-            loader.setSource("qrc:/QMLs/RegPage.qml");
-            backEnd.getTowns();
-            toolBarText.text = "Выберите направление";
+            backEnd.loadingRegPage();
         }
         function failRegistration() {
             toolBarText.text = "Какая-то ошибка"

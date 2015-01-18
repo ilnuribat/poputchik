@@ -277,7 +277,7 @@ void BackEnd::setDate(int day, int month)
     this->DATE = - date->daysTo(this->STARTDATE);
     qDebug() << "days: " << this->DATE;
 }
-void BackEnd::loadingRegPage() {
+void BackEnd::loadingRegPage() {//make load RegPage. include setQML, getTowns, toolBar, tumbler
     QObject *loader = mainWindow->findChild<QObject*>("loader");
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     QString regPageQML = "qrc:/QMLs/RegPage.qml";
