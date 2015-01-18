@@ -12,6 +12,7 @@ Rectangle {
     Rectangle {
         //Показывает дату
         id: chooseTimeSegmentTitle
+        objectName: "chooseTimeSegmentTitle"
         anchors.top:  parent.top
         height: parent.height / 10
         anchors.left: parent.left
@@ -22,7 +23,6 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: height * 0.5
-            text: "25 октября, 2014г"
             color: "black"
         }
     }

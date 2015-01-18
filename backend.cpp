@@ -44,6 +44,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
     //Это - стартовая точка. С этого дня будем считать все даты.
     this->STARTDATE.setDate(2015, 1, 1);
     this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
+    qputenv("QT_QUICK_CONTROLS_STYLE", "Flat");
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {

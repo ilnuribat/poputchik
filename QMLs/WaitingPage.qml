@@ -121,6 +121,7 @@ Rectangle {
                 anchors.top: parent.top
                 height: parent.height / 2
                 Text {
+                    id: textOfName
                     anchors.fill: parent;
                     font.pixelSize: 0.8 * height
                     horizontalAlignment: Text.AlignLeft
@@ -147,8 +148,8 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        console.log(textOfPhone.text, "trying to make call")
-                        var flag = Qt.openUrlExternally("tel:%1".arg("89874774911"));
+                        console.log(textOfName.text, "trying to make call")
+                        var flag = Qt.openUrlExternally("tel:%1".arg(textOfName.text));
                         console.log(flag, " - make call");
                     }
                 }
