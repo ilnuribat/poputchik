@@ -6,7 +6,6 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     mainWindow = engine.rootObjects().value(0);
 
-    QObject *loader = mainWindow->findChild<QObject*>("loader");
 
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
@@ -22,19 +21,13 @@ BackEnd::BackEnd(QQuickItem *parent) :
       this->IP = settings->value("IP").toString();
     qDebug() << this->IP;
 
-    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
+    QObject *loader = mainWindow->findChild<QObject*>("loader");
 
-    if(loader) qDebug() << "imitation: setting loading to true";
-        //loader->setProperty("loadig", "true");
-    else qDebug() << "Error, loader not found";
 
     if(IDFromSettings != NULL)
     {
         loader->setProperty("registered", "true");
-        QString regPageQML = "qrc:/QMLs/RegPage.qml";
-        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
-        getTowns();
-        toolBarText->setProperty("text", "Выберите направление");
+        loadingRegPage();
         this->ID = IDFromSettings.toInt();
         this->HUMAN = settings->value("human").toString();
     } else {
@@ -50,7 +43,6 @@ BackEnd::BackEnd(QQuickItem *parent) :
     //connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
     //Это - стартовая точка. С этого дня будем считать все даты.
     this->STARTDATE.setDate(2015, 1, 1);
-
     this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
@@ -286,5 +278,21 @@ void BackEnd::setDate(int day, int month)
     qDebug() << "days: " << this->DATE;
 }
 void BackEnd::loadingRegPage() {
-
+    QObject *loader = mainWindow->findChild<QObject*>("loader");
+    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
+    QString regPageQML = "qrc:/QMLs/RegPage.qml";
+    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
+    getTowns();
+    toolBarText->setProperty("text", "Выберите направление");
+    QObject *tumblerDatePicker = mainWindow->findChild<QObject*>("tumblerDatePicker");
+    if(!tumblerDatePicker) {
+        qDebug() << "tumbler is not found";
+        return;
+    }
+    qDebug() << "tumbler is found";
+    QVariant day;
+    day.setValue(QDate::currentDate().day());
+    QMetaObject::invokeMethod(tumblerDatePicker, "setDay", Q_ARG(QVariant, day));
+    QVariant month;
+    month.setValue(QDate::currentDate().month());
 }

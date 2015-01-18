@@ -92,6 +92,7 @@ Rectangle {
         color: parent.color
 
         Tumbler {
+            id: tumblerDatePicker
             objectName: "tumblerDatePicker"
             anchors.centerIn: parent
             //День
@@ -130,6 +131,14 @@ Rectangle {
 
             TumblerColumn {
                 model: [2015]
+            }
+            function setDay(day) {
+                console.log("called day!: ", day);
+                tumblerDatePicker.setCurrentIndexAt(0, day - 1);
+            }
+            function setMonth(month) {
+                console.log("called month!: ", month);
+                tumblerDatePicker.setCurrentIndexAt(1, month - 1);
             }
         }
 
