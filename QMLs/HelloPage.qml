@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
+import QtQuick.Enterprise.Controls 1.2
 
 Rectangle {
     anchors.fill: parent
@@ -155,7 +156,7 @@ Rectangle {
             onClicked: {
 
                 backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
-                                                                    phoneNumber.text, humanName.text);
+                                                                    "8" + phoneNumber.text, humanName.text);
             }
         }
         function registrationSuccess() {

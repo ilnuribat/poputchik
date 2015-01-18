@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.2
+import QtQuick.Enterprise.Controls 1.2
 import "QMLs"
 
 
@@ -29,7 +30,7 @@ ApplicationWindow {
             objectName: "toolBarText"
             text: "Добро пожаловать!"
             anchors.fill: parent
-            font.pixelSize: parent.height * 0.5
+            font.pixelSize: parent.height * 0.4
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "darkblue"
@@ -48,7 +49,6 @@ ApplicationWindow {
         property bool loadig: true
         focus: true
         source: "qrc:/QMLs/StartPage.qml"
-
 
         function setQML(QML)
         {

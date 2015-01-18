@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <QJsonValue>
 #include <vector>
+#include <QDate>
 
 class BackEnd : public QQuickItem
 {
@@ -18,18 +19,19 @@ class BackEnd : public QQuickItem
 public:
     explicit BackEnd(QQuickItem *parent = 0);
 
-  Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
-  Q_INVOKABLE void getTowns();
-  Q_INVOKABLE void standToQueue();
-  Q_INVOKABLE void setTimeQueue(int x);
-  Q_INVOKABLE void ChooseTimeLoaded();
-  Q_INVOKABLE void getTimeTable();
-  Q_INVOKABLE void setSourceTown(int index);
-  Q_INVOKABLE void setDestinationTown(int index);
-  Q_INVOKABLE void checkDirection();
-  Q_INVOKABLE void setSeatsBooked(int count);
-  Q_INVOKABLE void getStatus();
-  Q_INVOKABLE void setDate(QDate DATE);
+    Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
+    Q_INVOKABLE void getTowns();
+    Q_INVOKABLE void standToQueue();
+    Q_INVOKABLE void setTimeQueue(int x);
+    Q_INVOKABLE void ChooseTimeLoaded();
+    Q_INVOKABLE void getTimeTable();
+    Q_INVOKABLE void setSourceTown(int index);
+    Q_INVOKABLE void setDestinationTown(int index);
+    Q_INVOKABLE void checkDirection();
+    Q_INVOKABLE void setSeatsBooked(int count);
+    Q_INVOKABLE void getStatus();
+    Q_INVOKABLE void setDate(int day, int month);
+    Q_INVOKABLE void loadingRegPage();
 
 private:
   //Движок QML

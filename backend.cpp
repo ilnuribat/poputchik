@@ -11,9 +11,13 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
     QString IDFromSettings = settings->value("ID").toString();
-    //IP = "http://localhost:8080";
-    this->IP = "http://10.10.14.141:8080";
-    //this->IP = "http://194.58.100.50";
+    //this->IP = "http://localhost:8080";
+    //this->IP = "http://10.10.14.141:8080";
+    this->IP = "http://194.58.100.50";
+
+    //Сервер на ноуте
+    //this->IP = "http://192.168.1.129:8080";
+
     if(settings->value("IP").toString() != NULL)
       this->IP = settings->value("IP").toString();
     qDebug() << this->IP;
@@ -34,8 +38,8 @@ BackEnd::BackEnd(QQuickItem *parent) :
         this->ID = IDFromSettings.toInt();
         this->HUMAN = settings->value("human").toString();
     } else {
-        QString regPageQML = "qrc:/QMLs/HelloPage.qml";
-        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
+        QString helloPageQML = "qrc:/QMLs/HelloPage.qml";
+        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(helloPageQML)));
         loader->setProperty("registered", "false");
     }
     settings->sync();
@@ -45,7 +49,8 @@ BackEnd::BackEnd(QQuickItem *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
     //connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
     //Это - стартовая точка. С этого дня будем считать все даты.
-    this->STARTDATE.setDate(2014, 12, 15);
+    this->STARTDATE.setDate(2015, 1, 1);
+
     this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
 }
 void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
@@ -122,13 +127,15 @@ void BackEnd::ChooseTimeLoaded()
 }
 void BackEnd::getTimeTable()
 {
-  //Проверяем, находимся ли мы на странице WaitingPage.qml
-  qDebug() << "timeTable called";
-  QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-  connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-  QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date=" + QString::number(this->DATE));
-  QNetworkRequest request(QUrl(requestAddres.toUtf8()));
-  pManager->get(request);
+    //Проверяем, находимся ли мы на странице WaitingPage.qml
+    //QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
+    //if(!TIMES) return;
+    qDebug() << "timeTable called";
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
+    QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date=" + QString::number(this->DATE));
+    QNetworkRequest request(QUrl(requestAddres.toUtf8()));
+    pManager->get(request);
 }
 void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 {
@@ -270,7 +277,14 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
       QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
   }
 }
-void BackEnd::setDate(QDate date)
+void BackEnd::setDate(int day, int month)
 {
-  this->DATE = - date.daysTo(this->STARTDATE);
+    qDebug() << day << " date, " << month << " month";
+    QDate *date = new QDate(2015, month, day);
+
+    this->DATE = - date->daysTo(this->STARTDATE);
+    qDebug() << "days: " << this->DATE;
+}
+void BackEnd::loadingRegPage() {
+
 }

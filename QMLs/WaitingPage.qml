@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
 import QtQuick.Dialogs 1.2
+import QtQuick.Enterprise.Controls 1.2
 
 Rectangle {
     id: parentGlobal
@@ -95,14 +96,15 @@ Rectangle {
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
     }
+
     ListView {
         id: listNamePhone
-        objectName: "listHumans"
         anchors.bottom: goTime.top
         anchors.top: drivePassTool.bottom
         anchors.topMargin: parent.height * 0.01
         anchors.left: parent.left
         anchors.right: parent.right
+        objectName: "listHumans"
         model: ListModel{}
         delegate: Rectangle {
             id: listDelegate
@@ -118,7 +120,7 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.top: parent.top
                 height: parent.height / 2
-                Text{
+                Text {
                     anchors.fill: parent;
                     font.pixelSize: 0.8 * height
                     horizontalAlignment: Text.AlignLeft
@@ -127,24 +129,29 @@ Rectangle {
                 }
             }
             //Надпись: Номер
-            Rectangle{
+            Rectangle {
                 color: parent.color
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.rightMargin: parent.width / 10
                 anchors.bottom: parent.bottom
                 height: parent.height / 2
-                Text{
+                Text {
+                    id: textOfPhone
                     anchors.fill: parent;
-                    font.pixelSize: 0.8 * height
+                    font.pixelSize: parent.height
                     horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
                     text: phone
                 }
-            }
-            MouseArea {
-                anchors.fill: parent
-                onClicked: console.log("component clilcked");
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        console.log(textOfPhone.text, "trying to make call")
+                        var flag = Qt.openUrlExternally("tel:%1".arg("89874774911"));
+                        console.log(flag, " - make call");
+                    }
+                }
             }
         }
         function append(newElement){

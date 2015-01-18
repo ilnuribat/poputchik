@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Enterprise.Controls 1.2
 
 Rectangle {
     anchors.fill: parent
@@ -6,6 +7,6 @@ Rectangle {
     Text {
         anchors.centerIn: parent
         text: "Добро Пожаловать!"
-        font.pixelSize: parent.height / 10
+        font.pixelSize: parent.height / 20
     }
 }
