@@ -148,7 +148,8 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
         map.insert("drivers", QString::number(queueArr[i]));
         map.insert("passengers", QString::number(queueArr[8 + i]));
 
-        QString timeStr = QString(3*i < 10 ? "0" : "") + QString::number(3*i) + ":00";
+        QString timeStr = QString(3 * i < 10 ? "0" : "") + QString::number(3*i) + ":00 - ";
+        timeStr.append(QString(3 * (i + 1) < 10 ? "0" : "") + QString::number(3 * (i + 1)) + ":00");
         map.insert("time", timeStr);
         QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }

@@ -26,6 +26,7 @@ Rectangle {
             color: "black"
         }
     }
+
     Component {
         id: timeDelegate
         Rectangle {
@@ -37,7 +38,7 @@ Rectangle {
                 anchors.fill: parent
                 anchors.margins: 10
                 color: index != listOfTimes.highLightIndex ? "#AFAFAF" : "#CECECE"
-                Text {
+                Text {//Текст сегмента времени
                     id: timeID
                     anchors.top: parent.top
                     anchors.left: parent.left
