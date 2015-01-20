@@ -148,10 +148,12 @@ Rectangle {
         id: goTable
         objectName: "goToTableButton"
         anchors.right: parent.right
-        width: parent.width * 0.7
+        //width: parent.width * 0.7
+        anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height * 0.02
         anchors.rightMargin: parent.width * 0.01
+        anchors.leftMargin: parent.width * 0.01
 
         height: parent.height / 10
 
