@@ -7,25 +7,6 @@
         <file>QMLs/WaitingPage.qml</file>
         <file>QMLs/StartPage.qml</file>
     </qresource>
-    <qresource prefix="/image">
-        <file>images/car.png</file>
-        <file>images/car.svg</file>
-        <file>images/car1.png</file>
-        <file>images/car50.png</file>
-        <file>images/car100.png</file>
-        <file>images/car700.png</file>
-        <file>images/fon.png</file>
-        <file>images/fon_cell_of_table.png</file>
-        <file>images/fon_cell_of_table_100.png</file>
-        <file>images/fon_grid.png</file>
-        <file>images/fon1.png</file>
-        <file>images/human.png</file>
-        <file>images/human_1.png</file>
-        <file>images/human_1_fone.png</file>
-        <file>images/success.png</file>
-        <file>images/tableFon.png</file>
-        <file>images/tableFon.svg</file>
-    </qresource>
     <qresource prefix="/icons">
         <file>images/pngFromGoogle/car/ic_directions_car_black_48dp.png</file>
         <file>images/pngFromGoogle/car/ic_directions_car_grey600_48dp.png</file>

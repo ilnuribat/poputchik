@@ -16,8 +16,7 @@ Rectangle {
         anchors.leftMargin: parent.width / 20
         height: parent.height / 10
         width: parent.width * 0.4
-        model: ListModel {
-        }
+        model: ListModel {}
         function append(newTown)
         {
             sourceTown.model.append(newTown);
@@ -50,7 +49,7 @@ Rectangle {
         anchors.top: destinationTown.bottom
         anchors.topMargin: parent.height / 15
         anchors.rightMargin: parent.width / 20
-        width: parent.width / 4
+        width: parent.width / 6
         height: parent.height / 10
         model: ListModel {
             ListElement { text: "1" }
@@ -69,7 +68,8 @@ Rectangle {
 
     Text {
         //Подпись для количества мест
-        id: numberSeatsBooked
+        id: textSeatsBooked
+        objectName: "textSeatsBooked"
         anchors.top: sourceTown.bottom
         anchors.topMargin: parent.height / 20
         anchors.right: numberSeats.left
@@ -78,27 +78,45 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         height: parent.height / 10
-        font.pixelSize: height / 2.5
-        wrapMode: Text.WordWrap
+        font.pixelSize: mainQML.fontPixelSize
+        //wrapMode: Text.WordWrap
         property int isDriver: 0
         text: isDriver == 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
     }
 
-    Rectangle{
+    Text {
+        id: titleDateChoose
         anchors.top: numberSeats.bottom
+        anchors.topMargin: parent.height / 10
         anchors.left: parent.left
         anchors.right: parent.right
+        height: parent.height / 15
+        font.pixelSize: height / 2
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        text: "Выберите дату поездки"
+    }
+
+    Rectangle{
+        //Выбор даты
+        id: selectDate
+        anchors.top: titleDateChoose.bottom
+        anchors.left: parent.left
+        width: parent.width
         anchors.bottom: goTable.top
         color: parent.color
+            //"#00ff00"
 
         Tumbler {
             id: tumblerDatePicker
             objectName: "tumblerDatePicker"
             anchors.centerIn: parent
+            height: parent.height * 0.7
+            //width: parent.width * 0.5
             //День
             TumblerColumn {
                 id: daysColumn
-                //model: 11
+                width: selectDate.width * 0.15
                 model: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
                 onCurrentIndexChanged: {
                     console.log("current day: ", currentIndex)
@@ -109,6 +127,7 @@ Rectangle {
             //Месяц
             TumblerColumn {
                 id: monthsColumn
+                width: selectDate.width * 0.25
                 //model: 10
                 model: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентярь", "Октярь", "Ноябрь", "Декабрь"]
 
@@ -130,6 +149,7 @@ Rectangle {
             }
 
             TumblerColumn {
+                width: selectDate.width * 0.15
                 model: [2015]
             }
             function setDay(day) {

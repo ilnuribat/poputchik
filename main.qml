@@ -7,9 +7,11 @@ import "QMLs"
 
 ApplicationWindow {
     visible: true
-    width: 480
-    height: 800
+    width: 300
+    height: 500
     objectName: "mainQML"
+    id: mainQML
+    property int fontPixelSize: height / 30
     /*
       TODO
       loader!

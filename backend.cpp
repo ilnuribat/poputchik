@@ -27,12 +27,12 @@ BackEnd::BackEnd(QQuickItem *parent) :
     if(IDFromSettings != NULL)
     {
         loader->setProperty("registered", "true");
-        loadingRegPage();
+        //loadingRegPage();
         this->ID = IDFromSettings.toInt();
         this->HUMAN = settings->value("human").toString();
     } else {
         QString helloPageQML = "qrc:/QMLs/HelloPage.qml";
-        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(helloPageQML)));
+        //QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(helloPageQML)));
         loader->setProperty("registered", "false");
     }
     settings->sync();
@@ -279,7 +279,8 @@ void BackEnd::setDate(int day, int month)
     this->DATE = - date->daysTo(this->STARTDATE);
     qDebug() << "days: " << this->DATE;
 }
-void BackEnd::loadingRegPage() {//make load RegPage. include setQML, getTowns, toolBar, tumbler
+void BackEnd::loadingRegPage() {
+    //make load RegPage. include setQML, getTowns, toolBar, tumbler
     QObject *loader = mainWindow->findChild<QObject*>("loader");
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     QString regPageQML = "qrc:/QMLs/RegPage.qml";
@@ -297,4 +298,9 @@ void BackEnd::loadingRegPage() {//make load RegPage. include setQML, getTowns, t
     QMetaObject::invokeMethod(tumblerDatePicker, "setDay", Q_ARG(QVariant, day));
     QVariant month;
     month.setValue(QDate::currentDate().month());
+
+    QObject *textSeatsBooked = mainWindow->findChild<QObject *>("textSeatsBooked");
+    QString howMuchSeatsBooked = "Сколько ";
+    howMuchSeatsBooked.append(this->HUMAN == "driver" ? "свободных мест:" : "мест забронировать:");
+    textSeatsBooked->setProperty("text", howMuchSeatsBooked);
 }

@@ -45,7 +45,7 @@ Rectangle {
                     anchors.right: parent.right
                     height: parent.height / 2
                     text: time
-                    font.pointSize: 14
+                    font.pixelSize: height * 0.8
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }

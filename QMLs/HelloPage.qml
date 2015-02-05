@@ -26,6 +26,7 @@ Rectangle {
                 color: "white"
             }
     }
+
     TextField {
         //Ваше Имя
         id: humanName
