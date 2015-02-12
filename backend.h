@@ -18,20 +18,31 @@ class BackEnd : public QQuickItem
     Q_OBJECT
 public:
     explicit BackEnd(QQuickItem *parent = 0);
-
+    //Регистрация
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
+    //Получить список городов
     Q_INVOKABLE void getTowns();
+    //Встать в очередь
     Q_INVOKABLE void standToQueue();
+    //Получить ячейку, куда нажали. Страница TimePage.qml
     Q_INVOKABLE void setTimeQueue(int x);
-    Q_INVOKABLE void ChooseTimeLoaded();
+    //Получить состояние очереди на определенную дату и направление
     Q_INVOKABLE void getTimeTable();
+    //Назначить городом отправления
     Q_INVOKABLE void setSourceTown(int index);
+    //Назначить городом пребытия
     Q_INVOKABLE void setDestinationTown(int index);
-    Q_INVOKABLE void checkDirection();
+    //Установить количество мест забронированных\свободных
     Q_INVOKABLE void setSeatsBooked(int count);
+    //После того, как встал в очередь, нужно узнать, есть ли водитель\пассажир
     Q_INVOKABLE void getStatus();
+    //Установить выбранную дату
     Q_INVOKABLE void setDate(int day, int month);
+    //"Логика" загрузки RegPage.
     Q_INVOKABLE void loadingRegPage();
+    //"Логика" загрузки TimePage, со стороны RegPage.
+    //Узнать, есть ли такое направление, если нет, то попросить выбрать другое направление.
+    Q_INVOKABLE void goTimeTable();
 
 private:
   //Движок QML
@@ -64,6 +75,8 @@ private:
   QString townNames[100];
   //Стартовая дата, именно с этой даты будем считать, сколько дней прошло.
   QDate STARTDATE;
+  //Пример: '5 февраля'. Этот текст будет отображаться в TimePage.
+  QString chosenDate;
 
 signals:
 

@@ -4,8 +4,12 @@ import QtQuick.Controls.Styles 1.2
 import QtQuick.Enterprise.Controls 1.2
 
 Rectangle {
+    id: globalParent
+    objectName: "RegPage"
     anchors.fill: parent
     color: 'darkgrey'
+    property int monthChosen: 1
+    property int dayChosen: 1
 
     ComboBox {
         id: sourceTown
@@ -22,11 +26,16 @@ Rectangle {
             sourceTown.model.append(newTown);
             destinationTown.model.append(newTown);
         }
+        function clearList()
+        {
+            sourceTown.model.clear();
+            destinationTown.model.clear();
+        }
+
         onCurrentIndexChanged: {
             backEnd.setSourceTown(currentIndex + 1);
         }
     }
-
     ComboBox {
         id: destinationTown
         objectName: "destinationTowns"
@@ -42,7 +51,6 @@ Rectangle {
             backEnd.setDestinationTown(currentIndex + 1);
         }
     }
-
     ComboBox {
         id: numberSeats
         anchors.right: parent.right
@@ -65,7 +73,6 @@ Rectangle {
             backEnd.setSeatsBooked(currentIndex + 1);
         }
     }
-
     Text {
         //Подпись для количества мест
         id: textSeatsBooked
@@ -79,11 +86,10 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
         height: parent.height / 10
         font.pixelSize: mainQML.fontPixelSize
-        //wrapMode: Text.WordWrap
+        //TODO: Сделать нормальную проверку
         property int isDriver: 0
-        text: isDriver == 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
+        text: isDriver != 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
     }
-
     Text {
         id: titleDateChoose
         anchors.top: numberSeats.bottom
@@ -96,7 +102,6 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
         text: "Выберите дату поездки"
     }
-
     Rectangle{
         //Выбор даты
         id: selectDate
@@ -112,28 +117,22 @@ Rectangle {
             objectName: "tumblerDatePicker"
             anchors.centerIn: parent
             height: parent.height * 0.7
-            //width: parent.width * 0.5
             //День
             TumblerColumn {
                 id: daysColumn
                 width: selectDate.width * 0.15
                 model: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
                 onCurrentIndexChanged: {
-                    console.log("current day: ", currentIndex)
                     backEnd.setDate(daysColumn.currentIndex + 1, monthsColumn.currentIndex + 1);
                 }
             }
-
             //Месяц
             TumblerColumn {
                 id: monthsColumn
                 width: selectDate.width * 0.25
-                //model: 10
                 model: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентярь", "Октярь", "Ноябрь", "Декабрь"]
 
                 onCurrentIndexChanged: {
-                    //console.log("index changed:", currentIndex)
-
                     if(currentIndex == 0 || currentIndex == 2 || currentIndex == 4 ||
                             currentIndex == 6 || currentIndex == 7 || currentIndex == 9 ||
                             currentIndex == 11)
@@ -142,8 +141,6 @@ Rectangle {
                     if (currentIndex == 1) daysColumn.model = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28];
                     else
                     daysColumn.model = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
-
-                    //backEnd.setDate(daysColumn.currentIndex + 1, monthsColumn.currentIndex + 1);
                 }
 
             }
@@ -153,17 +150,14 @@ Rectangle {
                 model: [2015]
             }
             function setDay(day) {
-                console.log("called day!: ", day);
                 tumblerDatePicker.setCurrentIndexAt(0, day - 1);
             }
             function setMonth(month) {
-                console.log("called month!: ", month);
                 tumblerDatePicker.setCurrentIndexAt(1, month - 1);
             }
         }
 
     }
-
     Button {
         id: goTable
         objectName: "goToTableButton"
@@ -185,22 +179,9 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            backEnd.checkDirection();
-            //Вот это нежданчик. Я вроде это не писал
-            parent.enabled = false;
-        }
-        function failDirection() {
-            parent.enabled = true;
-            console.log("there is no such direction");
-            toolBarText.text = "Выберите другой маршрут"
-        }
-        function goToTable() {
-            backEnd.getTimeTable();
-            loader.setSource("qrc:/QMLs/TimePage.qml");
-            toolBarText.text = "Выберите время";
+            backEnd.goTimeTable();
         }
     }
-
     Button {
         id: goToBack
         height: parent.height / 10
@@ -221,5 +202,4 @@ Rectangle {
             toolBarText.text = "Добро пожаловать!"
         }
     }
-
 }

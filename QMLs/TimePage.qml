@@ -19,6 +19,7 @@ Rectangle {
         anchors.right: parent.right
         color: "lightgrey"
         Text {
+            objectName: "timeTableTitle"
             anchors.fill: parent
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -45,7 +46,7 @@ Rectangle {
                     anchors.right: parent.right
                     height: parent.height / 2
                     text: time
-                    font.pixelSize: height * 0.8
+                    font.pixelSize: mainQML.fontPixelSize
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -58,7 +59,7 @@ Rectangle {
                     width: height
                 }
                 Text {
-                    id: driversID
+                    id: driversCount
                     anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
                     anchors.left: driverICON.right
@@ -73,11 +74,11 @@ Rectangle {
                     source: "qrc:/icons/images/pngFromGoogle/2Person/ic_people_black_48dp.png"
                     anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
-                    anchors.left: driversID.right
+                    anchors.left: driversCount.right
                     width: height
                 }
                 Text {
-                    id: passengersID
+                    id: passengersCount
                     anchors.top: timeID.bottom
                     anchors.bottom: parent.bottom
                     anchors.left: passengerICON.right
