@@ -1,4 +1,4 @@
-#ifndef BACKEND_H
+﻿#ifndef BACKEND_H
 #define BACKEND_H
 
 #include <QQuickItem>
