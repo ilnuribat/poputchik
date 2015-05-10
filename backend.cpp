@@ -75,6 +75,9 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
     QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
     if(!TIMES) return;
 
+    //Очистка списка
+    QMetaObject::invokeMethod(TIMES, "clearTimeTable");
+
     QString JSONtimes(reply->readAll());
 
     //if response = 'unknown direction'
@@ -291,4 +294,22 @@ void BackEnd::setSeatsBooked(int count)
 {
     this->SEATS_BOOKED = count;
 }
-
+void BackEnd::removeFromQueue()
+{
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotDropFromQueue(QNetworkReply*)));
+    QString requestAddress(IP);
+    requestAddress.append("/dropFromQueue?");
+    requestAddress.append("human=" + this->HUMAN);
+    requestAddress.append("&time=" + QString::number(this->timeID));
+    requestAddress.append("&direction=" + QString::number(this->directionID));
+    requestAddress.append("&id=" + QString::number(this->ID));
+    requestAddress.append("&date=" + QString::number(this->DATE));
+    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
+    pManager->get(request);
+}
+void BackEnd::slotDropFromQueue(QNetworkReply *reply)
+{
+    QString strReply(reply->readAll());
+    qDebug() << strReply << "removed from Queue";
+}
