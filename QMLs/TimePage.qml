@@ -110,14 +110,15 @@ Rectangle {
         clip: true
         model: ListModel {}
         delegate: timeDelegate
-        function append(countOfPassengersDrivers) {
-            listOfTimes.model.append(countOfPassengersDrivers);
+        function append(newElement) {
+            listOfTimes.model.append(newElement);
         }
         function clearTimeTable()
         {
             listOfTimes.model.clear();
         }
     }
+
     Button {
         id: goToReg
         height: parent.height / 10
