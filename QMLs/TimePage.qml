@@ -94,6 +94,7 @@ Rectangle {
                 onClicked: {
                     listOfTimes.highLightIndex = index
                     backEnd.setTimeQueue(index + 1);
+                    goWaiting.enabled = true;
                 }
             }
         }
@@ -144,6 +145,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height * 0.02
         anchors.rightMargin: parent.width * 0.01
+        enabled: false
         height: parent.height / 10
         Text {
             anchors.fill: parent
