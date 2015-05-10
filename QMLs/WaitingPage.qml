@@ -184,6 +184,7 @@ Rectangle {
         onClicked: {
             loader.setSource("qrc:/QMLs/TimePage.qml")
             backEnd.getTimeTable();
+            backEnd.removeFromQueue();
             toolBarText.text = "Выберите время"
         }
     }
