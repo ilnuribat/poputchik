@@ -43,6 +43,8 @@ public:
     //"Логика" загрузки TimePage, со стороны RegPage.
     //Узнать, есть ли такое направление, если нет, то попросить выбрать другое направление.
     Q_INVOKABLE void goTimeTable();
+    //Убрать пассажира из очереди
+    Q_INVOKABLE void removeFromQueue();
 
 private:
   //Движок QML
@@ -87,6 +89,7 @@ public slots:
     void slotGotDirection(QNetworkReply *reply);
     void slotStandToQueue(QNetworkReply *reply);
     void slotGetQueueInfo(QNetworkReply *reply);
+    void slotDropFromQueue(QNetworkReply *reply);
 
     //Она нам нужна,чтобы таймер выполнял после таймаута.
     //Данная функция просто выполняет getStatus()
