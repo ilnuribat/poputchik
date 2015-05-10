@@ -197,16 +197,46 @@ void BackEnd::getSourceTowns()
 {
     //Получить список городов
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotTowns(QNetworkReply *)));
+    connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotSourceTowns(QNetworkReply *)));
     QString requestAddres(IP + "/towns");
     QNetworkRequest request(QUrl(requestAddres.toUtf8()));
     pManager->get(request);
 }
+void BackEnd::getDestTowns()
+{
+    //Получить список городов
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotDestTowns(QNetworkReply *)));
+    QString requestAddres(IP + "/Desttowns?source=" +
+                          QString::number(this->townSource) + "&date=" + QString::number(this->DATE));
 
-void BackEnd::slotGotTowns(QNetworkReply *reply)
+    QNetworkRequest request(QUrl(requestAddres.toUtf8()));
+    pManager->get(request);
+}
+
+
+void BackEnd::slotGotSourceTowns(QNetworkReply *reply)
 {
     QString JSONtowns(reply->readAll());
     QObject *TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
+    QMetaObject::invokeMethod(TOWNS, "clearList");
+
+    if(!TOWNS) return;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns.toUtf8());
+    QJsonArray jsonArr;
+    jsonArr = jsonDoc.array();
+    QVariantMap map;
+    for(int  i = 0; i < jsonArr.size(); i ++)
+    {
+        map.insert("text", jsonArr.at(i).toString());
+        this->townSourceNames[i] = jsonArr.at(i).toString();
+        QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+    }
+}
+void BackEnd::slotGotDestTowns(QNetworkReply *reply)
+{
+    QString JSONtowns(reply->readAll());
+    QObject *TOWNS = mainWindow->findChild<QObject*>("destinationTowns");
     QMetaObject::invokeMethod(TOWNS, "clearList");
 
     if(!TOWNS) return;

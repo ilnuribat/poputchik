@@ -24,16 +24,15 @@ Rectangle {
         function append(newTown)
         {
             sourceTown.model.append(newTown);
-            destinationTown.model.append(newTown);
         }
         function clearList()
         {
             sourceTown.model.clear();
-            destinationTown.model.clear();
         }
 
         onCurrentIndexChanged: {
             backEnd.setSourceTown(currentIndex + 1);
+            backEnd.getDestTowns();
         }
     }
     ComboBox {
@@ -48,6 +47,14 @@ Rectangle {
         
         model: ListModel {
         }
+
+        function append(newTown)        {
+            destinationTown.model.append(newTown);
+        }
+        function clearList()        {
+            destinationTown.model.clear();
+        }
+
         onCurrentIndexChanged: {
             backEnd.setDestinationTown(currentIndex + 1);
         }

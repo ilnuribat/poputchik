@@ -22,6 +22,8 @@ public:
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
     //Получить список городов
     Q_INVOKABLE void getSourceTowns();
+    //Получить список городов прибытия и число людей
+    Q_INVOKABLE void getDestTowns();
     //Встать в очередь
     Q_INVOKABLE void standToQueue();
     //Получить ячейку, куда нажали. Страница TimePage.qml
@@ -84,7 +86,8 @@ signals:
 
 public slots:
     void slotregistrationInServer(QNetworkReply *);
-    void slotGotTowns(QNetworkReply *reply);
+    void slotGotSourceTowns(QNetworkReply *reply);
+    void slotGotDestTowns(QNetworkReply *reply);
     void slotGotTimeTable(QNetworkReply *reply);
     void slotGotDirection(QNetworkReply *reply);
     void slotStandToQueue(QNetworkReply *reply);
