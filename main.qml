@@ -60,7 +60,6 @@ ApplicationWindow {
         onLoaded: {
             console.log("new qml page loaded", loader.source);
         }
-        onStatusChanged: console.log("status", status,  "item", item)
 
         Rectangle {
             id: loadingAnimation

@@ -15,10 +15,11 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
     params.append("&name=" + name);
     params.append("&phone=" + phone);
     pManager->post(request, params.toUtf8());
+    qDebug() << this->IP;
+    qDebug() << params;
 }
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
-
     QString strID = QString(reply->readAll());
     qDebug() << strID << "ID - registration";
     QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");

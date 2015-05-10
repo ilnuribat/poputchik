@@ -72,9 +72,17 @@ void BackEnd::getTimeTable()
 }
 void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 {
+
+
     //Получили ответ сервера, парсим ответ. JSON
     QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
     if(!TIMES) return;
+
+
+    //Установить там выбранную дату
+    QObject *timeTableTitle = this->mainWindow->findChild<QObject*>("timeTableTitle");
+    if(timeTableTitle)
+        timeTableTitle->setProperty("text", this->chosenDate);
 
     //Очистка списка
     QMetaObject::invokeMethod(TIMES, "clearTimeTable");
@@ -92,6 +100,7 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
     {
         QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, jsonArr.at(i).toVariant()));
     }
+
 }
 void BackEnd::standToQueue()
 {
