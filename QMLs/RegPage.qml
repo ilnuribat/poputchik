@@ -45,6 +45,7 @@ Rectangle {
         anchors.rightMargin: parent.width / 20
         height: parent.height / 10
         width: parent.width * 0.4
+        
         model: ListModel {
         }
         onCurrentIndexChanged: {
