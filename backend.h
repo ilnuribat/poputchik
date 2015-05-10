@@ -21,7 +21,7 @@ public:
     //Регистрация
     Q_INVOKABLE void registrationInServer(QString HUMAN, QString phone, QString name);
     //Получить список городов
-    Q_INVOKABLE void getTowns();
+    Q_INVOKABLE void getSourceTowns();
     //Встать в очередь
     Q_INVOKABLE void standToQueue();
     //Получить ячейку, куда нажали. Страница TimePage.qml
@@ -72,7 +72,7 @@ private:
   //Пассажир или Водитель
   QString HUMAN;
   //список городов
-  QString townNames[100];
+  QString townSourceNames[100];
   //Стартовая дата, именно с этой даты будем считать, сколько дней прошло.
   QDate STARTDATE;
   //Пример: '5 февраля'. Этот текст будет отображаться в TimePage.
