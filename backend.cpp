@@ -149,6 +149,8 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
   drivePassTool->setProperty("text", this->HUMAN == "driver" ? "Пассажиры:" : "Водитель");
   directionText->setProperty("text", this->townSourceNames[this->townSource - 1] +
       " - " + this->townSourceNames[this->townDestination - 1]);
+
+  //Пережитки старой идеи
   timeText->setProperty("text", QString(3 * (this->timeID - 1) < 10 ? "0" : "") +
                         QString::number(3 * (this->timeID - 1)) + ":00 - " +
                         QString(3 * this->timeID < 10 ? "0" : "") +
