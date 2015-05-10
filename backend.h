@@ -27,7 +27,7 @@ public:
     //Встать в очередь
     Q_INVOKABLE void standToQueue();
     //Получить ячейку, куда нажали. Страница TimePage.qml
-    Q_INVOKABLE void setTimeQueue(int x);
+    Q_INVOKABLE void setTimeQueue(int x, QString timeName);
     //Получить состояние очереди на определенную дату и направление
     Q_INVOKABLE void getTimeTable();
     //Назначить городом отправления
@@ -81,6 +81,8 @@ private:
   QDate STARTDATE;
   //Пример: '5 февраля'. Этот текст будет отображаться в TimePage.
   QString chosenDate;
+  //часовой отрезок из БД
+  QString timeName;
 
 signals:
 

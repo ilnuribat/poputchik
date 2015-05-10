@@ -12,7 +12,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
 
     this->IP = "http://localhost";
     //this->IP = "http://10.10.14.141:8080";
-    //this->IP = "http://194.58.100.50";
+    this->IP = "http://194.58.100.50";
 
     //Сервер на ноуте
     //this->IP = "http://192.168.1.129:8080";
@@ -55,7 +55,8 @@ BackEnd::BackEnd(QQuickItem *parent) :
     //Это - стартовая точка. С этого дня будем считать все даты.
     this->STARTDATE.setDate(2015, 1, 1);
     this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
-
+    this->townSource = 1;
+    emit getDestTowns();
     //Попытка сделать Tumbler нативным. Нужен QtQuick.Controls.Enterprise
     qputenv("QT_QUICK_CONTROLS_STYLE", "Flat");
 }
@@ -151,10 +152,8 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
       " - " + this->townSourceNames[this->townDestination - 1]);
 
   //Пережитки старой идеи
-  timeText->setProperty("text", QString(3 * (this->timeID - 1) < 10 ? "0" : "") +
-                        QString::number(3 * (this->timeID - 1)) + ":00 - " +
-                        QString(3 * this->timeID < 10 ? "0" : "") +
-                        QString::number(3 * this->timeID) + ":00");
+  timeText->setProperty("text", this->timeName);
+
   QMetaObject::invokeMethod(listHumans, "clearList");
   QString str = QString(reply->readAll());
   QStringList people = str.split('.');
@@ -249,13 +248,13 @@ void BackEnd::slotGotDestTowns(QNetworkReply *reply)
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
         map.insert("text", jsonArr.at(i).toString());
-        this->townSourceNames[i] = jsonArr.at(i).toString();
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
 }
-void BackEnd::setTimeQueue(int x)
+void BackEnd::setTimeQueue(int x, QString timeName)
 {
     this->timeID = x;
+    this->timeName = timeName;
 }
 
 void BackEnd::setDestinationTown(int index)

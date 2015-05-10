@@ -93,7 +93,7 @@ Rectangle {
                 anchors.fill: parent
                 onClicked: {
                     listOfTimes.highLightIndex = index
-                    backEnd.setTimeQueue(index + 1);
+                    backEnd.setTimeQueue(index + 1, time);
                     goWaiting.enabled = true;
                 }
             }
