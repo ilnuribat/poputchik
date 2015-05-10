@@ -10,9 +10,9 @@ BackEnd::BackEnd(QQuickItem *parent) :
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
 
-    //this->IP = "http://localhost:8080";
+    this->IP = "http://localhost";
     //this->IP = "http://10.10.14.141:8080";
-    this->IP = "http://194.58.100.50";
+    //this->IP = "http://194.58.100.50";
 
     //Сервер на ноуте
     //this->IP = "http://192.168.1.129:8080";
@@ -74,24 +74,19 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
     //Получили ответ сервера, парсим ответ. JSON
     QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
     if(!TIMES) return;
+
     QString JSONtimes(reply->readAll());
-    qDebug() << JSONtimes;
+
+    //if response = 'unknown direction'
+    if(JSONtimes[0] == 'u') {
+        return;
+    }
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtimes.toUtf8());
     QJsonArray jsonArr = jsonDoc.array();
-    QVariantMap map;
-    int queueArr[16] = {0};
-    for(int i = 0; i < jsonArr.size(); i ++) {
-        queueArr[i] = jsonArr.at(i).toInt();
-    }
-    for(int i = 0; i < 8; i ++)
-    {
-        map.insert("drivers", QString::number(queueArr[i]));
-        map.insert("passengers", QString::number(queueArr[8 + i]));
 
-        QString timeStr = QString(3 * i < 10 ? "0" : "") + QString::number(3*i) + ":00 - ";
-        timeStr.append(QString(3 * (i + 1) < 10 ? "0" : "") + QString::number(3 * (i + 1)) + ":00");
-        map.insert("time", timeStr);
-        QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+    for(int i = 0; i < jsonArr.size(); i ++)
+    {
+        QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, jsonArr.at(i).toVariant()));
     }
 }
 void BackEnd::standToQueue()
@@ -149,8 +144,8 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
   QObject *drivePassTool = mainWindow->findChild<QObject*>("drivePassTool");
   QObject *listHumans = mainWindow->findChild<QObject*>("listHumans");
   drivePassTool->setProperty("text", this->HUMAN == "driver" ? "Пассажиры:" : "Водитель");
-  directionText->setProperty("text", this->townNames[this->townSource - 1] +
-      " - " + this->townNames[this->townDestination - 1]);
+  directionText->setProperty("text", this->townSourceNames[this->townSource - 1] +
+      " - " + this->townSourceNames[this->townDestination - 1]);
   timeText->setProperty("text", QString(3 * (this->timeID - 1) < 10 ? "0" : "") +
                         QString::number(3 * (this->timeID - 1)) + ":00 - " +
                         QString(3 * this->timeID < 10 ? "0" : "") +
@@ -174,7 +169,7 @@ void BackEnd::loadingRegPage() {
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     QString regPageQML = "qrc:/QMLs/RegPage.qml";
     QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
-    getTowns();
+    getSourceTowns();
     toolBarText->setProperty("text", "Выберите направление");
 
     QObject *tumblerDatePicker = mainWindow->findChild<QObject*>("tumblerDatePicker");
@@ -195,9 +190,7 @@ void BackEnd::loadingRegPage() {
     howMuchSeatsBooked.append(this->HUMAN == "driver" ? "свободных мест:" : "мест забронировать:");
     textSeatsBooked->setProperty("text", howMuchSeatsBooked);
 }
-
-
-void BackEnd::getTowns()
+void BackEnd::getSourceTowns()
 {
     //Получить список городов
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
@@ -221,7 +214,7 @@ void BackEnd::slotGotTowns(QNetworkReply *reply)
     for(int  i = 0; i < jsonArr.size(); i ++)
     {
         map.insert("text", jsonArr.at(i).toString());
-        this->townNames[i] = jsonArr.at(i).toString();
+        this->townSourceNames[i] = jsonArr.at(i).toString();
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
 }
@@ -237,6 +230,7 @@ void BackEnd::setDestinationTown(int index)
 void BackEnd::setSourceTown(int index)
 {
     this->townSource = index;
+
 }
 void BackEnd::goTimeTable()
 {
@@ -265,7 +259,7 @@ void BackEnd::slotGotDirection(QNetworkReply *reply)
         RegPage->setProperty("enabled", "true");
         QObject *toolBarText = this->mainWindow->findChild<QObject*>("toolBarText");
         toolBarText->setProperty("text", "Выберите другой маршрут");
-        getTowns();
+        getSourceTowns();
         return ;
     }
     //direction found!
