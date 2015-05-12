@@ -174,7 +174,7 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
       QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
   }
 }
-void BackEnd::loadingRegPage() {
+void BackEnd::loadedRegPage() {
     //make load RegPage. include setQML, getTowns, toolBar, tumbler
     QObject *loader = mainWindow->findChild<QObject*>("loader");
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
@@ -352,19 +352,29 @@ void BackEnd::slotDropFromQueue(QNetworkReply *reply)
     qDebug() << strReply << "removed from Queue";
 }
 
-void BackEnd::loadingRegPage()
+void BackEnd::loadedRegPage()
 {
+    //Загрузка городов отправления
+    //установка сегодняшней даты
+    //установка количества мест, которые были установлены в предыдущий раз
+    //установка города отправления, который был назначен в предыдущий раз
+    //установка записи в "меню"
 
 }
 void BackEnd::loadedHelloPage()
 {
-
+    //ничего в приницпе не надо делать
+    //установка записи в "меню"
 }
 void BackEnd::loadedTimePage()
 {
-
+    //загрузка данных
+    //Установка даты
+    //установка записи в "меню"
 }
 void BackEnd::loadedWaitingPage()
 {
-
+    //Установка даты
+    //установка маршрута
+    //установка записи в "меню"
 }
