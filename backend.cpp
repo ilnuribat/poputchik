@@ -14,9 +14,6 @@ BackEnd::BackEnd(QQuickItem *parent) :
     //this->IP = "http://10.10.14.141:8080";
     this->IP = "http://194.58.100.50";
 
-    //Сервер на ноуте
-    //this->IP = "http://192.168.1.129:8080";
-
     //Вытаскиваем IP адрес из конфиг файлов. Зачем этот кусок кода вообще нужен?
     if(settings->value("IP").toString() != NULL)
       this->IP = settings->value("IP").toString();
