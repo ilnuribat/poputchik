@@ -47,6 +47,8 @@ public:
     Q_INVOKABLE void goTimeTable();
     //Убрать пассажира из очереди
     Q_INVOKABLE void removeFromQueue();
+    //handle the signal from Loader
+    Q_INVOKABLE void LoaderLoaded();
 
 private:
   //Движок QML
