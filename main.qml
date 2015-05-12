@@ -58,7 +58,7 @@ ApplicationWindow {
         }
 
         onLoaded: {
-            console.log("new qml page loaded", loader.source);
+            backEnd.loadedSignal(loader.source);
         }
 
         Rectangle {
