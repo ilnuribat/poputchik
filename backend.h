@@ -48,7 +48,9 @@ public:
     //Убрать пассажира из очереди
     Q_INVOKABLE void removeFromQueue();
     //handle the signal from Loader
-    Q_INVOKABLE void loadedSignal();
+    Q_INVOKABLE void loadedSignal(QString url);
+    //Узнать код маршрута
+    Q_INVOKABLE void getDirection();
 
 private:
   //Движок QML
