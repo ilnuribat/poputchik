@@ -25,12 +25,14 @@ BackEnd::BackEnd(QQuickItem *parent) :
     QString IDFromSettings = settings->value("ID").toString();
     if(IDFromSettings != NULL)
     {
+
         loader->setProperty("registered", "true");
         //Отправляем на loader страницу RegPage
         loadingRegPage();
         //Инициализация глобальных переменных
         this->ID = IDFromSettings.toInt();
         this->HUMAN = settings->value("human").toString();
+        emit getDestTowns();
     } else {
         //Если не зарегистрирован, то оправляем на страницу регистрации HelloPage
         QString helloPageQML = "qrc:/QMLs/HelloPage.qml";
@@ -53,7 +55,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
     this->STARTDATE.setDate(2015, 1, 1);
     this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
     this->townSource = 1;
-    emit getDestTowns();
+
 }
 void BackEnd::getTimeTable()
 {
