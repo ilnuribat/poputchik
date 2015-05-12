@@ -83,6 +83,14 @@ private:
   QString chosenDate;
   //часовой отрезок из БД
   QString timeName;
+  //текущая страница в loader
+  QString currentQML;
+
+  //Загруженные страницы QML
+  void loadedRegPage();
+  void loadedHelloPage();
+  void loadedTimePage();
+  void loadedWaitingPage();
 
 signals:
 

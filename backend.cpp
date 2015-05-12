@@ -9,8 +9,9 @@ BackEnd::BackEnd(QQuickItem *parent) :
 
     engine.rootContext()->setContextProperty("backEnd", this);
     settings = new QSettings("settings.ini", QSettings::IniFormat);
-
+#ifdef _DEBUG
     this->IP = "http://localhost";
+#endif
     //this->IP = "http://10.10.14.141:8080";
     this->IP = "http://194.58.100.50";
 
@@ -349,4 +350,21 @@ void BackEnd::slotDropFromQueue(QNetworkReply *reply)
 {
     QString strReply(reply->readAll());
     qDebug() << strReply << "removed from Queue";
+}
+
+void BackEnd::loadingRegPage()
+{
+
+}
+void BackEnd::loadedHelloPage()
+{
+
+}
+void BackEnd::loadedTimePage()
+{
+
+}
+void BackEnd::loadedWaitingPage()
+{
+
 }
