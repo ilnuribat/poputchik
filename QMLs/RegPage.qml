@@ -190,24 +190,4 @@ Rectangle {
             backEnd.goTimeTable();
         }
     }
-    Button {
-        id: goToBack
-        height: parent.height / 10
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: parent.height * 0.02
-        anchors.rightMargin: parent.width * 0.01
-        anchors.leftMargin: parent.width * 0.01
-        anchors.right: goTable.left
-        visible: false
-        Text {
-            anchors.centerIn: parent
-            font.pixelSize: parent.height / 2
-            text: "Назад"
-        }
-        onClicked: {
-            loader.setSource("qrc:/QMLs/HelloPage.qml")
-            toolBarText.text = "Добро пожаловать!"
-        }
-    }
 }
