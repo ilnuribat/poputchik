@@ -54,8 +54,6 @@ BackEnd::BackEnd(QQuickItem *parent) :
     this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
     this->townSource = 1;
     emit getDestTowns();
-    //Попытка сделать Tumbler нативным. Нужен QtQuick.Controls.Enterprise
-    qputenv("QT_QUICK_CONTROLS_STYLE", "Flat");
 }
 void BackEnd::getTimeTable()
 {
