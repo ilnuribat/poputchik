@@ -41,14 +41,14 @@ public:
     //Установить выбранную дату
     Q_INVOKABLE void setDate(int day, int month);
     //"Логика" загрузки RegPage.
-    Q_INVOKABLE void loadувRegPage();
+    Q_INVOKABLE void loadingRegPage();
     //"Логика" загрузки TimePage, со стороны RegPage.
     //Узнать, есть ли такое направление, если нет, то попросить выбрать другое направление.
     Q_INVOKABLE void goTimeTable();
     //Убрать пассажира из очереди
     Q_INVOKABLE void removeFromQueue();
     //handle the signal from Loader
-    Q_INVOKABLE void LoaderLoaded();
+    Q_INVOKABLE void loadedSignal();
 
 private:
   //Движок QML
