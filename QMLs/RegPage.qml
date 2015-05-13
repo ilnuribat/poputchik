@@ -32,7 +32,6 @@ Rectangle {
 
         onCurrentIndexChanged: {
             backEnd.setSourceTown(currentIndex + 1);
-            backEnd.getDestTowns();
         }
     }
     ComboBox {
@@ -72,10 +71,6 @@ Rectangle {
             ListElement { text: "2" }
             ListElement { text: "3" }
             ListElement { text: "4" }
-            ListElement { text: "5" }
-            ListElement { text: "6" }
-            ListElement { text: "7" }
-            ListElement { text: "8" }
         }
         onCurrentIndexChanged: {
             backEnd.setSeatsBooked(currentIndex + 1);
