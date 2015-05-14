@@ -3,37 +3,33 @@
 BackEnd::BackEnd(QQuickItem *parent) :
     QQuickItem(parent)
 {
+    this->STARTDATE.setDate(2015, 1, 1);
+    this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
+
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     mainWindow = engine.rootObjects().value(0);
 
-
     engine.rootContext()->setContextProperty("backEnd", this);
-    settings = new QSettings("settings.ini", QSettings::IniFormat);
-#ifdef _DEBUG
+
     this->IP = "http://localhost";
-#endif
     //this->IP = "http://10.10.14.141:8080";
     //this->IP = "http://194.58.100.50";
 
-    //Вытаскиваем IP адрес из конфиг файлов. Зачем этот кусок кода вообще нужен?
-    if(settings->value("IP").toString() != NULL)
-      this->IP = settings->value("IP").toString();
     qDebug() << this->IP;
 
     QObject *loader = mainWindow->findChild<QObject*>("loader");
 
     //Вытаскиваем ID из конфиг файлов. Если его нет, то регистрируем пользователя
+    settings = new QSettings("settings.ini", QSettings::IniFormat);
     QString IDFromSettings = settings->value("ID").toString();
     if(IDFromSettings != NULL)
     {
-
         loader->setProperty("registered", "true");
         //Отправляем на loader страницу RegPage
         loadingRegPage();
         //Инициализация глобальных переменных
         this->ID = IDFromSettings.toInt();
         this->HUMAN = settings->value("human").toString();
-        emit getDestTowns();
     } else {
         //Если не зарегистрирован, то оправляем на страницу регистрации HelloPage
         QString helloPageQML = "qrc:/QMLs/HelloPage.qml";
@@ -49,17 +45,17 @@ BackEnd::BackEnd(QQuickItem *parent) :
     //Обновление страницы статуса очереди, в которую мы уже встали
     //connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
 
-    //Обновление таблицы очередей на странице TimeTable
-    //connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
-
     //Это - стартовая точка. С этого дня будем считать все даты.
-    this->STARTDATE.setDate(2015, 1, 1);
-    this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
-    this->townSource = 1;
 
 }
 void BackEnd::getTimeTable()
 {
+    if(this->currentQML != "qrc:/QMLs/TimePage.qml")
+    {
+        qDebug() << "not time to load timeTable";
+        disconnect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
+        return;
+    }
     //Мы находимся на странице TimeTable
     //Отправляем запрос на вывод состояния очереди по данному направлению
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
@@ -123,25 +119,26 @@ void BackEnd::slotStandToQueue(QNetworkReply *reply)
     qDebug() << str;
 }
 void BackEnd::getStatus(){
-  //get request to Server. I want to know
-  //all about Queue, I am standing on
-  //ONLY FOR WAITING PAGE
+    //get request to Server. I want to know
+    //all about Queue, I am standing on
+    //ONLY FOR WAITING PAGE
+    qDebug() << "get queue info";
+    if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
+        disconnect(this->timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
+        qDebug() << "it is not Waiting page for getting info about queue";
+    }
 
-  QObject *refreshWaitingPage = mainWindow->findChild<QObject*>("refreshWaitingPage");
-  //Проверяем, находимся ли мы на странице WaitingPage.qml
-  if(!refreshWaitingPage) return;
-
-  QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-  connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGetQueueInfo(QNetworkReply*)));
-  QString requestAddress(IP);
-  requestAddress.append("/queueStatus?");
-  requestAddress.append("human=" + this->HUMAN);
-  requestAddress.append("&time=" + QString::number(this->timeID));
-  requestAddress.append("&direction=" + QString::number(this->directionID));
-  requestAddress.append("&id=" + QString::number(this->ID));
-  requestAddress.append("&date=" + QString::number(this->DATE));
-  QNetworkRequest request(QUrl(requestAddress.toUtf8()));
-  pManager->get(request);
+    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGetQueueInfo(QNetworkReply*)));
+    QString requestAddress(IP);
+    requestAddress.append("/queueStatus?");
+    requestAddress.append("human=" + this->HUMAN);
+    requestAddress.append("&time=" + QString::number(this->timeID));
+    requestAddress.append("&direction=" + QString::number(this->directionID));
+    requestAddress.append("&id=" + QString::number(this->ID));
+    requestAddress.append("&date=" + QString::number(this->DATE));
+    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
+    pManager->get(request);
 }
 void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
 {
@@ -193,6 +190,12 @@ void BackEnd::getSourceTowns()
 }
 void BackEnd::getDestTowns()
 {
+    if(this->currentQML != "qrc:/QMLs/RegPage.qml")
+    {
+        qDebug() << "RegPage is not loaded" << this->currentQML;
+        return;
+    }
+
     //Получить список городов
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotDestTowns(QNetworkReply *)));
@@ -220,6 +223,7 @@ void BackEnd::slotGotSourceTowns(QNetworkReply *reply)
         this->townSourceNames[i] = jsonArr.at(i).toString();
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
+    qDebug() << "got source towns";
 }
 void BackEnd::slotGotDestTowns(QNetworkReply *reply)
 {
@@ -237,6 +241,7 @@ void BackEnd::slotGotDestTowns(QNetworkReply *reply)
         map.insert("text", jsonArr.at(i).toString());
         QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
+    qDebug() << "got destination towns";
 }
 void BackEnd::setTimeQueue(int x, QString timeName)
 {
@@ -259,10 +264,13 @@ void BackEnd::setSourceTown(int index)
     this->townSource = index;
     this->directionID = 0;
     this->getDirection();
+    this->getDestTowns();
     QObject *goToTableButton = this->mainWindow->findChild<QObject*>("goToTableButton");
     //Замораживаем Кнопку goToTable
     goToTableButton->setProperty("enabled", "false");
     qDebug() << index << "from SourceTowns : disabled";
+
+
 }
 void BackEnd::goTimeTable()
 {
@@ -279,18 +287,9 @@ void BackEnd::goTimeTable()
 void BackEnd::slotGotDirection(QNetworkReply *reply)
 {
     this->directionID = QString(reply->readAll()).toInt();
-    qDebug() << this->directionID << "\t direction ID";
+
     if(this->directionID == 0)
-    {//there is no such direction
-        qDebug() << "there is no such direction";
-        //Сейчас надо всё разморозаить, сказать, чтобы он выбрал
-        //другой направление
-        QObject *RegPage = this->mainWindow->findChild<QObject*>("RegPage");
-        //Размораживаем страницу
-        RegPage->setProperty("enabled", "true");
-        QObject *toolBarText = this->mainWindow->findChild<QObject*>("toolBarText");
-        toolBarText->setProperty("text", "Выберите другой маршрут");
-        getSourceTowns();
+    {
         return ;
     }
 
@@ -310,7 +309,6 @@ void BackEnd::setDate(int day, int month)
                                  "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"};
 
     this->chosenDate = QString::number(day) + " " + monthList[month - 1];
-    qDebug() << this->chosenDate;
     this->DATE = - date->daysTo(this->STARTDATE);
     //День поменяли, надо и данные обновить
     this->getDestTowns();
@@ -377,31 +375,47 @@ void BackEnd::loadedTimePage()
     //загрузка данных
     //Установка даты
     //установка записи в "меню"
+    connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
 }
 void BackEnd::loadedWaitingPage()
 {
     //Установка даты
     //установка маршрута
     //установка записи в "меню"
+    connect(this->timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
+    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
+    toolBarText->setProperty("text", "Ожидание");
 }
 
 void BackEnd::loadedSignal(QString url)
 {
     qDebug() << "handled!\t" << url;
+    this->currentQML = url;
 
     if(url == "qrc:/QMLs/RegPage.qml")
         this->loadedRegPage();
 
-    if(url == "qrc:/QMLs/TimeTable.qml")
+    if(url == "qrc:/QMLs/TimePage.qml")
         this->loadedTimePage();
+    if(url == "qrc:/QMLs/WaitingPage.qml")
+        this->loadedWaitingPage();
 
 }
 void BackEnd::getDirection()
 {
+    if(this->currentQML != "qrc:/QMLs/RegPage.qml")
+        return;
     qDebug() << "request for getting direction";
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotDirection(QNetworkReply*)));
     QString  requestAddress(IP + "/direction?source=" + QString::number(this->townSource) + "&destination=" + QString::number(this->townDestination));
     QNetworkRequest request(QUrl(requestAddress.toUtf8()));
     pManager->get(request);
+}
+void BackEnd::loadingWaitingPage()
+{
+    QObject *loader = mainWindow->findChild<QObject*>("loader");
+    QString regPageQML = "qrc:/QMLs/WaitingPage.qml";
+    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
+    this->standToQueue();
 }
