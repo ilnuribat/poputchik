@@ -153,10 +153,7 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
-            loader.setSource("qrc:/QMLs/WaitingPage.qml")
-            toolBarText.text = "Ожидание"
-            backEnd.standToQueue();
-            backEnd.getStatus();
+            backEnd.loadingWaitingPage();
         }
     }
 }
