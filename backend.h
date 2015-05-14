@@ -51,6 +51,8 @@ public:
     Q_INVOKABLE void loadedSignal(QString url);
     //Узнать код маршрута
     Q_INVOKABLE void getDirection();
+    //начинаем загружать WaitingPage
+    Q_INVOKABLE void loadingWaitingPage();
 
 private:
   //Движок QML
