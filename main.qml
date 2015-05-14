@@ -50,7 +50,7 @@ ApplicationWindow {
         property string registered
         property bool loadig: true
         focus: true
-        source: "qrc:/QMLs/StartPage.qml"
+        //source: "qrc:/QMLs/StartPage.qml"
 
         function setQML(QML)
         {
