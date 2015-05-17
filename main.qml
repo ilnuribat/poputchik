@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.2
+import QtQuick.Window 2.0
 import QtQuick.Enterprise.Controls 1.3
 import "QMLs"
 
@@ -11,13 +11,7 @@ ApplicationWindow {
     height: 500
     objectName: "mainQML"
     id: mainQML
-    property int fontPixelSize: height / 30
-    /*
-      TODO
-      loader!
-      make animation of loader
-    */
-    //TODO using HTTPS
+    property int fontPixelSize: (25.4 / 72) * Screen.pixelDensity
 
     ToolBar {
         id: toolBar
@@ -32,7 +26,7 @@ ApplicationWindow {
             objectName: "toolBarText"
             text: "Добро пожаловать!"
             anchors.fill: parent
-            font.pixelSize: parent.height * 0.4
+            font.pointSize: 18 * mainQML.fontPixelSize
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "darkblue"
@@ -50,7 +44,6 @@ ApplicationWindow {
         property string registered
         property bool loadig: true
         focus: true
-        //source: "qrc:/QMLs/StartPage.qml"
 
         function setQML(QML)
         {
@@ -61,18 +54,6 @@ ApplicationWindow {
             backEnd.loadedSignal(loader.source);
         }
 
-        Rectangle {
-            id: loadingAnimation
-            color: "lightgreen"
-            opacity: 0.5
-            anchors.fill: parent
-            visible: true
-            Text {
-                anchors.centerIn: parent
-                font.pixelSize: 20
-                text: "Загрузка"
-            }
-        }
 
     }
 }
