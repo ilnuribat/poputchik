@@ -13,7 +13,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
 
     this->IP = "http://localhost";
     //this->IP = "http://10.10.14.141:8080";
-    //this->IP = "http://194.58.100.50";
+    this->IP = "http://194.58.100.50";
 
     qDebug() << this->IP;
 
@@ -56,6 +56,7 @@ void BackEnd::getTimeTable()
         disconnect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
         return;
     }
+
     //Мы находимся на странице TimeTable
     //Отправляем запрос на вывод состояния очереди по данному направлению
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
@@ -109,7 +110,6 @@ void BackEnd::standToQueue()
     params.append(this->HUMAN == "driver" ? "&seats=" : "&booked=");
     params.append(QString::number(this->SEATS_BOOKED));
     params.append("&date=" + QString::number(this->DATE));
-    qDebug() << params;
     pManager->post(request, params.toUtf8());
 }
 
@@ -122,10 +122,9 @@ void BackEnd::getStatus(){
     //get request to Server. I want to know
     //all about Queue, I am standing on
     //ONLY FOR WAITING PAGE
-    qDebug() << "get queue info";
     if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
         disconnect(this->timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
-        qDebug() << "it is not Waiting page for getting info about queue";
+        qDebug() << "getting info about queue: it is not Waiting page";
     }
 
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
@@ -208,6 +207,7 @@ void BackEnd::getDestTowns()
 
 void BackEnd::slotGotSourceTowns(QNetworkReply *reply)
 {
+    qDebug() << reply->error() << "error";
     QString JSONtowns(reply->readAll());
     QObject *TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
     QMetaObject::invokeMethod(TOWNS, "clearList");
@@ -362,7 +362,7 @@ void BackEnd::loadedRegPage()
 
     QObject *textSeatsBooked = mainWindow->findChild<QObject *>("textSeatsBooked");
     QString howMuchSeatsBooked = "Сколько ";
-    howMuchSeatsBooked.append(this->HUMAN == "driver" ? "свободных мест:" : "мест забронировать:");
+    howMuchSeatsBooked.append(this->HUMAN == "driver" ? "свободных мест:" : "мест занять?:");
     textSeatsBooked->setProperty("text", howMuchSeatsBooked);
 }
 void BackEnd::loadedHelloPage()
