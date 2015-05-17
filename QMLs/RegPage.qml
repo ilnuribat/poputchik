@@ -88,10 +88,8 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         height: parent.height / 10
-        font.pixelSize: mainQML.fontPixelSize
-        //TODO: Сделать нормальную проверку
-        property int isDriver: 0
-        text: isDriver != 0 ? "Сколько свободных мест" : "Сколько мест забронировать"
+        font.pointSize: mainQML.fontPixelSize * 14
+
     }
     Text {
         id: titleDateChoose
@@ -100,9 +98,9 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         height: parent.height / 15
-        font.pixelSize: height / 2
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+        font.pointSize: 14 * mainQML.fontPixelSize
         text: "Выберите дату поездки"
     }
     Rectangle{
@@ -177,7 +175,7 @@ Rectangle {
         Text {
             anchors.fill: parent
             text: "Далее"
-            font.pixelSize: parent.height / 2
+            font.pointSize: mainQML.fontPixelSize * 20
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
