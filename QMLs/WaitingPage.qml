@@ -173,13 +173,17 @@ Rectangle {
         anchors.rightMargin: parent.width * 0.01
         Text {
             anchors.fill: parent
-            text: "Выбрать другое время"
+            text: inQueue.text != "Готово!" ? "Выбрать другое время" : "Выход"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: height / 2
         }
         anchors.margins: height / 20
         onClicked: {
+            if(inQueue.text == "Готово!") {
+                console.log("exit");
+                Qt.quit();
+            }
             loader.setSource("qrc:/QMLs/TimePage.qml")
             backEnd.getTimeTable();
             backEnd.removeFromQueue();
