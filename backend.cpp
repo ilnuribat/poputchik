@@ -143,7 +143,10 @@ void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
 {
   QObject *refreshWaitingPage = mainWindow->findChild<QObject*>("refreshWaitingPage");
   //Проверяем, находимся ли мы на странице WaitingPage.qml
-  if(!refreshWaitingPage) return;
+  if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
+      qDebug() << "we are not in WaitingPage";
+      return;
+  }
 
   QObject *inQueueText = mainWindow->findChild<QObject*>("inQueueText");
   QObject *directionText = mainWindow->findChild<QObject*>("directionText");
