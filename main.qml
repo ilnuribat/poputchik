@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Window 2.0
 import QtQuick.Enterprise.Controls 1.3
+import QtQuick.Dialogs 1.2
 import "QMLs"
 
 
@@ -26,10 +27,26 @@ ApplicationWindow {
             objectName: "toolBarText"
             text: "Добро пожаловать!"
             anchors.fill: parent
-            font.pointSize: 18 * mainQML.fontPixelSize
+            font.pixelSize: 18 * mainQML.fontPixelSize
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "darkblue"
+        }
+    }
+
+    MessageDialog {
+        id: sayToAuthor
+        objectName: "sayToAuthor"
+        title: "Сервер не отвечает"
+        text: "Сообщить об этом разработчику(Ильнур)"
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes:
+            Qt.openUrlExternally("tel:%1".arg("+79874774911"))
+        onNo:
+            sayToAuthor.close()
+        function callOpen() {
+            console.log("open() called");
+            sayToAuthor.open();
         }
     }
 
