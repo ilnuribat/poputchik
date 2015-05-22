@@ -143,13 +143,13 @@ Rectangle {
                     verticalAlignment: Text.AlignVCenter
                     text: phone
                 }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        console.log(textOfName.text, "trying to make call")
-                        var flag = Qt.openUrlExternally("tel:%1".arg(textOfName.text));
-                        console.log(flag, " - make call");
-                    }
+            }
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    console.log(textOfName.text, "trying to make call", textOfName.text)
+                    var flag = Qt.openUrlExternally("tel:%1".arg(textOfName.text));
+                    console.log(flag, " - make call");
                 }
             }
         }
