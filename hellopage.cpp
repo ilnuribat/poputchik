@@ -20,15 +20,26 @@ void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 }
 void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
+    if(this->currentQML != "qrc:/QMLs/HelloPage.qml") {
+        qDebug() << "slotRegistration: hello page is not current";
+        return;
+    }
+
+    QObject *sayToAuthor = mainWindow->findChild<QObject*>("sayToAuthor");
+
+
+    if(reply->error()) {
+        qDebug() << "server is down or problems with the internet";
+        QMetaObject::invokeMethod(sayToAuthor, "callOpen");
+        return;
+    }
     QString strID = QString(reply->readAll());
     qDebug() << strID << "ID - registration";
     QObject *helloButton = mainWindow->findChild<QObject*>("helloButton");
-    if(!helloButton) return;
 
     if(strID.toInt() == 0 || strID.size() == 0)
     {//fails in registrations
-        qDebug() << "error with registration: " << QString(reply->readAll());
-        QMetaObject::invokeMethod(helloButton, "failRegistration");
+        qDebug() << "Этот номер уже используется" << QString(reply->readAll());
         return ;
     }
     this->ID = strID.toInt();
