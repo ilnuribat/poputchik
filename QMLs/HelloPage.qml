@@ -8,23 +8,23 @@ Rectangle {
     id: helloPage
     color: 'darkgrey'
     Rectangle {
-            //Название программы
-            id: title
+        //Название программы
+        id: title
 
-            color: parent.color
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.topMargin: parent.height / 40
-            height: parent.height / 15
-            Text {
-                anchors.fill: parent
-                text: "Мы Вас не знаем..."
-                font.pixelSize: height
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                color: "white"
-            }
+        color: parent.color
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: parent.height / 40
+        height: parent.height / 15
+        Text {
+            anchors.fill: parent
+            text: "Мы Вас не знаем..."
+            font.pixelSize: height
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            color: "white"
+        }
     }
 
     TextField {
@@ -165,8 +165,8 @@ Rectangle {
         function registrationSuccess() {
             backEnd.loadingRegPage();
         }
-        function failRegistration() {
-            toolBarText.text = "Какая-то ошибка"
+        function failRegistration(text) {
+            toolBarText.text = text
         }
     }
 }
