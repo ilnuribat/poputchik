@@ -89,7 +89,6 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
         height: parent.height / 10
         font.pixelSize: mainQML.fontPixelSize * 14
-
     }
     Text {
         id: titleDateChoose
@@ -100,7 +99,7 @@ Rectangle {
         height: parent.height / 15
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 18 * mainQML.fontPixelSize
+        font.pixelSize: 16 * mainQML.fontPixelSize
         text: "Выберите дату поездки"
     }
     Rectangle{

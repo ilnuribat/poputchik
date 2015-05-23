@@ -27,7 +27,7 @@ ApplicationWindow {
             objectName: "toolBarText"
             text: "Добро пожаловать!"
             anchors.fill: parent
-            font.pixelSize: 18 * mainQML.fontPixelSize
+            font.pointSize: 18 * mainQML.fontPixelSize
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "darkblue"
