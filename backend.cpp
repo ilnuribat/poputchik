@@ -40,7 +40,7 @@ BackEnd::BackEnd(QQuickItem *parent) :
 
     //В случае, если ни одно время не выбрали
     timer = new QTimer();
-    timer->start(3000);
+    timer->start(5000);
 
     //Обновление страницы статуса очереди, в которую мы уже встали
     //connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
@@ -99,7 +99,6 @@ void BackEnd::slotGotTimeTable(QNetworkReply *reply)
 }
 void BackEnd::standToQueue()
 {
-    //
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
     QString requestAddress(IP + "/q" + this->HUMAN);
@@ -141,37 +140,28 @@ void BackEnd::getStatus(){
 }
 void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
 {
-  QObject *refreshWaitingPage = mainWindow->findChild<QObject*>("refreshWaitingPage");
-  //Проверяем, находимся ли мы на странице WaitingPage.qml
-  if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
-      qDebug() << "we are not in WaitingPage";
-      return;
-  }
+    //Проверяем, находимся ли мы на странице WaitingPage.qml
+    if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
+        qDebug() << "we are not in WaitingPage";
+        return;
+    }
 
-  QObject *inQueueText = mainWindow->findChild<QObject*>("inQueueText");
-  QObject *directionText = mainWindow->findChild<QObject*>("directionText");
-  QObject *timeText = mainWindow->findChild<QObject*>("timeText");
-  QObject *drivePassTool = mainWindow->findChild<QObject*>("drivePassTool");
-  QObject *listHumans = mainWindow->findChild<QObject*>("listHumans");
-  drivePassTool->setProperty("text", this->HUMAN == "driver" ? "Пассажиры:" : "Водитель");
-  directionText->setProperty("text", this->townSourceNames[this->townSource - 1] +
-      " - " + this->townSourceNames[this->townDestination - 1]);
+    QObject *listHumans = mainWindow->findChild<QObject*>("listHumans");
+    QMetaObject::invokeMethod(listHumans, "clearList");
+    QString str = QString(reply->readAll());
+    QStringList people = str.split('.');
+    QObject *inQueueText = mainWindow->findChild<QObject*>("inQueueText");
+    inQueueText->setProperty("text", people.at(0));
 
-  //Пережитки старой идеи
-  timeText->setProperty("text", this->timeName);
-
-  QMetaObject::invokeMethod(listHumans, "clearList");
-  QString str = QString(reply->readAll());
-  QStringList people = str.split('.');
-  inQueueText->setProperty("text", people.at(0));
-  QVariantMap map;
-  for(int i = 1; i < people.size(); i ++)
-  {
-      QStringList human = people.at(i).split(',');
-      map.insert("name", human.at(0));
-      map.insert("phone", human.at(1));
-      QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
-  }
+    //Вот это надо оптимизировать. Чтобы в теле цикла было не более одной операции
+    QVariantMap map;
+    for(int i = 1; i < people.size(); i ++)
+    {
+        QStringList human = people.at(i).split(',');
+        map.insert("name", human.at(0));
+        map.insert("phone", human.at(1));
+        QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+    }
 }
 void BackEnd::loadingRegPage() {
     //make load RegPage. include setQML, getTowns, toolBar, tumbler
@@ -378,6 +368,8 @@ void BackEnd::loadedTimePage()
     //загрузка данных
     //Установка даты
     //установка записи в "меню"
+    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
+    toolBarText->setProperty("text", "Выберите время");
     connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
 }
 void BackEnd::loadedWaitingPage()
@@ -385,6 +377,16 @@ void BackEnd::loadedWaitingPage()
     //Установка даты
     //установка маршрута
     //установка записи в "меню"
+
+    QObject *directionText = mainWindow->findChild<QObject*>("directionText");
+    QObject *timeText = mainWindow->findChild<QObject*>("timeText");
+    QObject *drivePassTool = mainWindow->findChild<QObject*>("drivePassTool");
+
+    drivePassTool->setProperty("text", this->HUMAN == "driver" ? "Пассажиры:" : "Водитель");
+    directionText->setProperty("text", this->townSourceNames[this->townSource - 1] +
+        " - " + this->townSourceNames[this->townDestination - 1]);
+    timeText->setProperty("text", this->timeName);
+
     connect(this->timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
     QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
     toolBarText->setProperty("text", "Ожидание");
@@ -420,5 +422,6 @@ void BackEnd::loadingWaitingPage()
     QObject *loader = mainWindow->findChild<QObject*>("loader");
     QString regPageQML = "qrc:/QMLs/WaitingPage.qml";
     QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
+    //Вот тут не аккуратно
     this->standToQueue();
 }
