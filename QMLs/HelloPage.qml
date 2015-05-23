@@ -137,7 +137,7 @@ Rectangle {
         font.pixelSize: height / 2
         text: "+7"
     }
-    Rectangle {
+    Button {
         id: goNext
         objectName: "helloButton"
         anchors.right: parent.right
@@ -145,7 +145,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 20
         height: parent.height / 10
-        opacity: phoneNumber.text.length == 10 ? 1 : 0.8
+        enabled: phoneNumber.text.length == 10
         Text {
             anchors.fill: parent
             text: "Далее"
@@ -153,13 +153,10 @@ Rectangle {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
+        onClicked: {
 
-                backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
-                                                                    "8" + phoneNumber.text, humanName.text);
-            }
+            backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
+                                                                "8" + phoneNumber.text, humanName.text);
         }
 
         function registrationSuccess() {
