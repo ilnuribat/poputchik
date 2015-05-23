@@ -44,7 +44,7 @@ Rectangle {
                     anchors.right: parent.right
                     height: parent.height / 2
                     text: time
-                    font.pointSize: 18 * mainQML.fontPixelSize
+                    font.pixelSize: 18 * mainQML.fontPixelSize
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -63,7 +63,7 @@ Rectangle {
                     anchors.left: driverICON.right
                     width: parent.width / 4
                     text: drivers
-                    font.pointSize: 16 * mainQML.fontPixelSize
+                    font.pixelSize: 16 * mainQML.fontPixelSize
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -82,7 +82,7 @@ Rectangle {
                     anchors.left: passengerICON.right
                     anchors.right: parent.right
                     text: passengers
-                    font.pointSize: 16 * mainQML.fontPixelSize
+                    font.pixelSize: 16 * mainQML.fontPixelSize
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -129,7 +129,7 @@ Rectangle {
         anchors.rightMargin: parent.width * 0.01
         Text {
             anchors.centerIn: parent
-            font.pointSize: 20 * mainQML.fontPixelSize
+            font.pixelSize: 20 * mainQML.fontPixelSize
             text: "Назад"
         }
         onClicked: {
@@ -148,7 +148,7 @@ Rectangle {
         Text {
             anchors.fill: parent
             text: "Далее"
-            font.pointSize: 20 * mainQML.fontPixelSize
+            font.pixelSize: 20 * mainQML.fontPixelSize
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

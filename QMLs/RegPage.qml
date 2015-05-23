@@ -88,7 +88,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         height: parent.height / 10
-        font.pointSize: mainQML.fontPixelSize * 14
+        font.pixelSize: mainQML.fontPixelSize * 14
 
     }
     Text {
@@ -100,7 +100,7 @@ Rectangle {
         height: parent.height / 15
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        font.pointSize: 14 * mainQML.fontPixelSize
+        font.pixelSize: 18 * mainQML.fontPixelSize
         text: "Выберите дату поездки"
     }
     Rectangle{
@@ -175,7 +175,7 @@ Rectangle {
         Text {
             anchors.fill: parent
             text: "Далее"
-            font.pointSize: mainQML.fontPixelSize * 20
+            font.pixelSize: mainQML.fontPixelSize * 20
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
