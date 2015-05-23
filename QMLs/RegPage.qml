@@ -180,7 +180,7 @@ Rectangle {
         Text {
             anchors.fill: parent
             text: "Далее"
-            font.pixelSize: height
+            font.pixelSize: height * 0.8
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
