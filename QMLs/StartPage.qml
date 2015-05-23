@@ -12,7 +12,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         anchors.topMargin: parent.height * 0.4
         text: "Попутчик"
-        font.pixelSize: mainQML.fontPixelSize * 1.6
+        font.pixelSize: height * 0.6
     }
     Text {
         rotation: -30
@@ -21,7 +21,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.leftMargin: parent.width * 0.6
         anchors.topMargin: parent.height * 0.4
-        font.pixelSize: mainQML.fontPixelSize * 1.5
+        font.pixelSize: height * 0.6
         text: "mobile"
         color: "green"
     }

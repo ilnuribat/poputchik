@@ -44,7 +44,7 @@ Rectangle {
                     anchors.right: parent.right
                     height: parent.height / 2
                     text: time
-                    font.pixelSize: 18 * mainQML.fontPixelSize
+                    font.pixelSize: height * 0.6
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -63,7 +63,7 @@ Rectangle {
                     anchors.left: driverICON.right
                     width: parent.width / 4
                     text: drivers
-                    font.pixelSize: 16 * mainQML.fontPixelSize
+                    font.pixelSize: height * 0.6
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -82,7 +82,7 @@ Rectangle {
                     anchors.left: passengerICON.right
                     anchors.right: parent.right
                     text: passengers
-                    font.pixelSize: 16 * mainQML.fontPixelSize
+                    font.pixelSize: height * 0.6
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                 }
@@ -139,7 +139,7 @@ Rectangle {
     Button {
         id: goWaiting
         anchors.right: parent.right
-        width: parent.width * 0.7
+        width: parent.width * 0.6
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height * 0.02
         anchors.rightMargin: parent.width * 0.01

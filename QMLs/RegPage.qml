@@ -34,6 +34,7 @@ Rectangle {
             backEnd.setSourceTown(currentIndex + 1);
         }
     }
+
     ComboBox {
         id: destinationTown
         objectName: "destinationTowns"
@@ -58,6 +59,7 @@ Rectangle {
             backEnd.setDestinationTown(currentIndex + 1);
         }
     }
+
     ComboBox {
         id: numberSeats
         anchors.right: parent.right
@@ -76,6 +78,7 @@ Rectangle {
             backEnd.setSeatsBooked(currentIndex + 1);
         }
     }
+
     Text {
         //Подпись для количества мест
         id: textSeatsBooked
@@ -88,8 +91,9 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         height: parent.height / 10
-        font.pixelSize: mainQML.fontPixelSize * 14
+        font.pixelSize: height * 0.3
     }
+
     Text {
         id: titleDateChoose
         anchors.top: numberSeats.bottom
@@ -99,9 +103,10 @@ Rectangle {
         height: parent.height / 15
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 16 * mainQML.fontPixelSize
+        font.pixelSize: height * 0.6
         text: "Выберите дату поездки"
     }
+
     Rectangle{
         //Выбор даты
         id: selectDate
@@ -158,6 +163,7 @@ Rectangle {
         }
 
     }
+
     Button {
         id: goTable
         objectName: "goToTableButton"
@@ -174,7 +180,7 @@ Rectangle {
         Text {
             anchors.fill: parent
             text: "Далее"
-            font.pixelSize: mainQML.fontPixelSize * 20
+            font.pixelSize: height
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }

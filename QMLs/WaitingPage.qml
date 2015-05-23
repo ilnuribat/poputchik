@@ -43,7 +43,7 @@ Rectangle {
         anchors.left: parent.left
         height: parent.height / 15
         anchors.right: parent.right
-        font.pixelSize: 3 * height / 4
+        font.pixelSize: height * 0.75
         style: Text.Outline;
         styleColor: "lightgreen"
         horizontalAlignment: Text.AlignHCenter
@@ -72,7 +72,7 @@ Rectangle {
         anchors.left: parent.left
         height: parent.height / 15
         anchors.right: parent.right
-        font.pixelSize: 3 * height / 4
+        font.pixelSize: height * 0.75
         style: Text.Outline;
         styleColor: "lightgreen"
         horizontalAlignment: Text.AlignHCenter

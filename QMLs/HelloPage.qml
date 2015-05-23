@@ -62,8 +62,8 @@ Rectangle {
         anchors.top: humanName.bottom
         height: parent.height / 10
         width: parent.width
-        anchors.leftMargin: parent.width / 10
-        anchors.rightMargin: parent.width / 10
+        anchors.leftMargin: parent.width * 0.15
+        anchors.rightMargin: parent.width * 0.1
         anchors.topMargin: 10
         font.pixelSize: height / 2
         placeholderText: "Номер телефона"
@@ -131,9 +131,10 @@ Rectangle {
         id: plus7
         anchors.top: phoneNumber.top
         anchors.right: phoneNumber.left
-        anchors.rightMargin: 5
-        height: parent.height / 10
-        anchors.topMargin: height / 6
+        height: phoneNumber.height
+        anchors.rightMargin: parent.width * 0.01
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         font.pixelSize: height / 2
         text: "+7"
     }
