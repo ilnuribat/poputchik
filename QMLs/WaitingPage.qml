@@ -6,6 +6,7 @@ Rectangle {
     id: parentGlobal
     anchors.fill: parent
     color: "#C0C0C0"
+
     //В очереди, или нет
     Text {
         id: inQueue
@@ -14,7 +15,6 @@ Rectangle {
         anchors.left: parent.left
         height: parent.height / 20
         width: parent.width
-        text: "В очереди"
         font.pixelSize: height
         style: Text.Sunken
         horizontalAlignment: Text.AlignHCenter
@@ -43,7 +43,6 @@ Rectangle {
         anchors.left: parent.left
         height: parent.height / 15
         anchors.right: parent.right
-        text: "Уфа - Сибай"
         font.pixelSize: 3 * height / 4
         style: Text.Outline;
         styleColor: "lightgreen"
@@ -73,7 +72,6 @@ Rectangle {
         anchors.left: parent.left
         height: parent.height / 15
         anchors.right: parent.right
-        text: "15:00-18:00"
         font.pixelSize: 3 * height / 4
         style: Text.Outline;
         styleColor: "lightgreen"
@@ -89,7 +87,6 @@ Rectangle {
         anchors.leftMargin: parent.width / 20
         height: parent.height / 20
         anchors.right: parent.right
-        text: "Водитель:"
         font.pixelSize: height
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
@@ -171,31 +168,38 @@ Rectangle {
         anchors.leftMargin:parent.width * 0.01
         anchors.bottomMargin: parent.height * 0.02
         anchors.rightMargin: parent.width * 0.01
+        visible: inQueue.text != "Готово!"
+
         Text {
             anchors.fill: parent
-            text: inQueue.text != "Готово!" ? "Выбрать другое время" : "Выход"
+            text: "Выбрать другое время"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: height / 2
         }
         anchors.margins: height / 20
         onClicked: {
-            if(inQueue.text == "Готово!") {
-                console.log("exit");
-                Qt.quit();
-            }
+            console.log("goTimeTable clicked");
             loader.setSource("qrc:/QMLs/TimePage.qml")
             backEnd.getTimeTable();
             backEnd.removeFromQueue();
             toolBarText.text = "Выберите время"
         }
     }
-    Item {
-        id: refreshITEM
-        objectName: "refreshWaitingPage"
-        function getStatus()
-        {
-            backEnd.getStatus()
+    Button {
+        id: exitButton
+        anchors.fill: goTime
+        visible: inQueue.text == "Готово!"
+        Text {
+            anchors.fill: parent
+            text: "Выход"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: height / 2
+        }
+        onClicked: {
+            console.log("exitButton clicked");
+            Qt.quit();
         }
     }
 }
