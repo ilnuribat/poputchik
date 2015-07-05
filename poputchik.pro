@@ -3,8 +3,7 @@ TEMPLATE = app
 QT += qml quick widgets network
 
 SOURCES += main.cpp \
-    backend.cpp \
-    hellopage.cpp
+    backend.cpp
 
 RESOURCES += qml.qrc
 

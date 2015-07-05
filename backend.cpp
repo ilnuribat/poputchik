@@ -3,173 +3,101 @@
 BackEnd::BackEnd(QQuickItem *parent) :
     QQuickItem(parent)
 {
-    this->STARTDATE.setDate(2015, 1, 1);
-    this->DATE = this->STARTDATE.daysTo(QDate::currentDate());
-
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     mainWindow = engine.rootObjects().value(0);
 
     engine.rootContext()->setContextProperty("backEnd", this);
 
-    this->IP = "http://localhost";
-    //this->IP = "http://10.10.14.141:8080";
-    this->IP = "http://194.58.100.50";
+    this->IP = "http://localhost:8080";
+    //this->IP = "http://194.58.100.50";
 
     qDebug() << this->IP;
 
     QObject *loader = mainWindow->findChild<QObject*>("loader");
-
-    //Вытаскиваем ID из конфиг файлов. Если его нет, то регистрируем пользователя
-    settings = new QSettings("settings.ini", QSettings::IniFormat);
-    QString IDFromSettings = settings->value("ID").toString();
-    if(IDFromSettings != NULL)
-    {
-        loader->setProperty("registered", "true");
-        //Отправляем на loader страницу RegPage
-        loadingRegPage();
-        //Инициализация глобальных переменных
-        this->ID = IDFromSettings.toInt();
-        this->HUMAN = settings->value("human").toString();
-    } else {
-        //Если не зарегистрирован, то оправляем на страницу регистрации HelloPage
-        QString helloPageQML = "qrc:/QMLs/HelloPage.qml";
-        QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(helloPageQML)));
-        loader->setProperty("registered", "false");
-    }
-    settings->sync();
-
-    //В случае, если ни одно время не выбрали
     timer = new QTimer();
     timer->start(5000);
 
+    //Вытаскиваем ID из конфиг файлов. Если его нет, то регистрируем пользователя
+    settings = new QSettings("settings.ini", QSettings::IniFormat);
+
+    QString currentQMLPage = settings->value("currentQML").toString();
+    this->HUMAN = settings->value("human").toString();
+    this->ID = settings->value("ID").toInt();
+
+    //Если пассажир зарегестриован
+    if(this->ID > 0)
+    {
+        //Отправляем на loader страницу RegPage
+        loadingRegPage();
+        //Инициализация глобальных переменных
+        return;
+    }
+
+    //Если не зарегистрирован, то оправляем на страницу регистрации HelloPage
+    QString helloPageQML = "qrc:/QMLs/HelloPage.qml";
+    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(helloPageQML)));
+
+    //В случае, если ни одно время не выбрали
     //Обновление страницы статуса очереди, в которую мы уже встали
     //connect(timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
 
     //Это - стартовая точка. С этого дня будем считать все даты.
 
 }
-void BackEnd::getTimeTable()
-{
-    if(this->currentQML != "qrc:/QMLs/TimePage.qml")
-    {
-        qDebug() << "not time to load timeTable";
-        disconnect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
-        return;
-    }
 
-    //Мы находимся на странице TimeTable
-    //Отправляем запрос на вывод состояния очереди по данному направлению
-    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGotTimeTable(QNetworkReply*)));
-    QString requestAddres(IP + "/data?direction=" + QString::number(this->directionID) + "&date=" + QString::number(this->DATE));
-    QNetworkRequest request(QUrl(requestAddres.toUtf8()));
-    pManager->get(request);
-}
-void BackEnd::slotGotTimeTable(QNetworkReply *reply)
-{
-
-
-    //Получили ответ сервера, парсим ответ. JSON
-    QObject *TIMES = mainWindow->findChild<QObject*>("timeGrid");
-    if(!TIMES) return;
-
-
-    //Установить там выбранную дату
-    QObject *timeTableTitle = this->mainWindow->findChild<QObject*>("timeTableTitle");
-    if(timeTableTitle)
-        timeTableTitle->setProperty("text", this->chosenDate);
-
-    //Очистка списка
-    QMetaObject::invokeMethod(TIMES, "clearTimeTable");
-
-    QString JSONtimes(reply->readAll());
-
-    //if response = 'unknown direction'
-    if(JSONtimes[0] == 'u') {
-        return;
-    }
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtimes.toUtf8());
-    QJsonArray jsonArr = jsonDoc.array();
-
-    for(int i = 0; i < jsonArr.size(); i ++)
-    {
-        QMetaObject::invokeMethod(TIMES, "append", Q_ARG(QVariant, jsonArr.at(i).toVariant()));
-    }
-
-}
-void BackEnd::standToQueue()
+//Hello Page
+void BackEnd::registrationInServer(QString HUMAN, QString phone, QString name)
 {
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotStandToQueue(QNetworkReply*)));
-    QString requestAddress(IP + "/q" + this->HUMAN);
-    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
-    QString params("id=" + QString::number(this->ID));
-    params.append("&direction=" + QString::number(this->directionID));
-    params.append("&time=" + QString::number(this->timeID));
-    params.append(this->HUMAN == "driver" ? "&seats=" : "&booked=");
-    params.append(QString::number(this->SEATS_BOOKED));
-    params.append("&date=" + QString::number(this->DATE));
+    connect(pManager, SIGNAL(finished(QNetworkReply*)), this,
+            SLOT(slotregistrationInServer(QNetworkReply*)));
+    this->HUMAN = HUMAN;
+    QString prepareRequest(IP + "/registration");
+    QNetworkRequest request(QUrl(prepareRequest.toUtf8()));
+    request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      "application/x-www-form-urlencoded");
+    QString params("human=" + this->HUMAN);
+    params.append("&name=" + name);
+    params.append("&phone=" + phone);
     pManager->post(request, params.toUtf8());
+    qDebug() << this->IP;
+    qDebug() << params;
 }
-
-void BackEnd::slotStandToQueue(QNetworkReply *reply)
+void BackEnd::slotregistrationInServer(QNetworkReply *reply)
 {
-    QString str = QString(reply->readAll());
-    qDebug() << str;
-}
-void BackEnd::getStatus(){
-    //get request to Server. I want to know
-    //all about Queue, I am standing on
-    //ONLY FOR WAITING PAGE
-    if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
-        disconnect(this->timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
-        qDebug() << "getting info about queue: it is not Waiting page";
-    }
-
-    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotGetQueueInfo(QNetworkReply*)));
-    QString requestAddress(IP);
-    requestAddress.append("/queueStatus?");
-    requestAddress.append("human=" + this->HUMAN);
-    requestAddress.append("&time=" + QString::number(this->timeID));
-    requestAddress.append("&direction=" + QString::number(this->directionID));
-    requestAddress.append("&id=" + QString::number(this->ID));
-    requestAddress.append("&date=" + QString::number(this->DATE));
-    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
-    pManager->get(request);
-}
-void BackEnd::slotGetQueueInfo(QNetworkReply *reply)
-{
-    //Проверяем, находимся ли мы на странице WaitingPage.qml
-    if(this->currentQML != "qrc:/QMLs/WaitingPage.qml") {
-        qDebug() << "we are not in WaitingPage";
+    if(this->currentQML != "qrc:/QMLs/HelloPage.qml") {
+        qDebug() << "slotRegistration: hello page is not current";
         return;
     }
 
-    QObject *listHumans = mainWindow->findChild<QObject*>("listHumans");
-    QMetaObject::invokeMethod(listHumans, "clearList");
-    QString str = QString(reply->readAll());
-    QStringList people = str.split('.');
-    QObject *inQueueText = mainWindow->findChild<QObject*>("inQueueText");
-    inQueueText->setProperty("text", people.at(0));
+    QObject *sayToAuthor = mainWindow->findChild<QObject*>("sayToAuthor");
 
-    //Вот это надо оптимизировать. Чтобы в теле цикла было не более одной операции
-    QVariantMap map;
-    for(int i = 1; i < people.size(); i ++)
-    {
-        QStringList human = people.at(i).split(',');
-        map.insert("name", human.at(0));
-        map.insert("phone", human.at(1));
-        QMetaObject::invokeMethod(listHumans, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+    if(reply->error()) {
+        qDebug() << "server is down or problems with the internet";
+        QMetaObject::invokeMethod(sayToAuthor, "callOpen");
+        return;
     }
+    QString strID = QString(reply->readAll());
+    qDebug() << strID << "ID - registration";
+
+    this->ID = strID.toInt();
+    //Записываем значение в файл настроек
+    settings->setValue("ID", strID);
+    settings->setValue("registerred", "true");
+    settings->setValue("human", this->HUMAN);
+    settings->sync();
+
+    this->loadingRegPage();
 }
+
+//RegPage
 void BackEnd::loadingRegPage() {
-    //make load RegPage. include setQML, getTowns, toolBar, tumbler
+    //send RegPage.qml to loader.source
     QObject *loader = mainWindow->findChild<QObject*>("loader");
     QString regPageQML = "qrc:/QMLs/RegPage.qml";
-    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
-
-
+    qDebug() << "setting RegPage";
+    QMetaObject::invokeMethod(loader, "setQML",
+                              Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
 }
 void BackEnd::getSourceTowns()
 {
@@ -191,21 +119,26 @@ void BackEnd::getDestTowns()
     //Получить список городов
     QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
     connect(pManager, SIGNAL(finished(QNetworkReply *)), this, SLOT(slotGotDestTowns(QNetworkReply *)));
+    //Заглушка
     QString requestAddres(IP + "/Desttowns?source=" +
-                          QString::number(this->townSource) + "&date=" + QString::number(this->DATE));
+                          QString::number(this->townSource) + "&date=0");
+    //+ QString::number(this->DATE));
 
     QNetworkRequest request(QUrl(requestAddres.toUtf8()));
     pManager->get(request);
 }
-
+void BackEnd::setExactTime(QString time)
+{
+    this->TIME = time;
+}
 void BackEnd::slotGotSourceTowns(QNetworkReply *reply)
 {
-    qDebug() << reply->error() << "error";
     QString JSONtowns(reply->readAll());
-    QObject *TOWNS = mainWindow->findChild<QObject*>("sourceTowns");
-    QMetaObject::invokeMethod(TOWNS, "clearList");
+    QObject *SourceTOWNS = mainWindow->findChild<QObject*>("sourceTowns");
+    QObject *DestTowns = mainWindow->findChild<QObject*>("sourceTowns");
+    QMetaObject::invokeMethod(SourceTOWNS, "clearList");
+    QMetaObject::invokeMethod(DestTowns, "clearList");
 
-    if(!TOWNS) return;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(JSONtowns.toUtf8());
     QJsonArray jsonArr;
     jsonArr = jsonDoc.array();
@@ -214,9 +147,8 @@ void BackEnd::slotGotSourceTowns(QNetworkReply *reply)
     {
         map.insert("text", jsonArr.at(i).toString());
         this->townSourceNames[i] = jsonArr.at(i).toString();
-        QMetaObject::invokeMethod(TOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
+        QMetaObject::invokeMethod(SourceTOWNS, "append", Q_ARG(QVariant, QVariant::fromValue(map)));
     }
-    qDebug() << "got source towns";
 }
 void BackEnd::slotGotDestTowns(QNetworkReply *reply)
 {
@@ -236,12 +168,6 @@ void BackEnd::slotGotDestTowns(QNetworkReply *reply)
     }
     qDebug() << "got destination towns";
 }
-void BackEnd::setTimeQueue(int x, QString timeName)
-{
-    this->timeID = x;
-    this->timeName = timeName;
-}
-
 void BackEnd::setDestinationTown(int index)
 {
     this->townDestination = index;
@@ -251,160 +177,16 @@ void BackEnd::setDestinationTown(int index)
     //Замораживаем Кнопку goToTable
     goToTableButton->setProperty("enabled", "false");
     qDebug() << index << "from DestTowns : disabled";
+
+    //this->settings->setValue("townNameDest", this->);
 }
 void BackEnd::setSourceTown(int index)
 {
+    qDebug() << "setSourceTown";
     this->townSource = index;
     this->directionID = 0;
     this->getDirection();
     this->getDestTowns();
-    QObject *goToTableButton = this->mainWindow->findChild<QObject*>("goToTableButton");
-    //Замораживаем Кнопку goToTable
-    goToTableButton->setProperty("enabled", "false");
-    qDebug() << index << "from SourceTowns : disabled";
-
-
-}
-void BackEnd::goTimeTable()
-{
-    //direction found!
-    //Тут мы должны перевести чувака на TimePage
-    QObject *loader = this->mainWindow->findChild<QObject*>("loader");
-    QString TimePage = "qrc:/QMLs/TimePage.qml";
-    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(TimePage)));
-
-    //Установить там выбранную дату
-    QObject *timeTableTitle = this->mainWindow->findChild<QObject*>("timeTableTitle");
-    timeTableTitle->setProperty("text", this->chosenDate);
-}
-void BackEnd::slotGotDirection(QNetworkReply *reply)
-{
-    this->directionID = QString(reply->readAll()).toInt();
-
-    if(this->directionID == 0)
-    {
-        return ;
-    }
-
-    QObject *goToTableButton = this->mainWindow->findChild<QObject*>("goToTableButton");
-    //Размораживаем Кнопку goToTable
-    goToTableButton->setProperty("enabled", "true");
-}
-
-void BackEnd::setDate(int day, int month)
-{
-    //До инициализации страницы к нам почему-то уже прилетают вызовы
-    if(day * month == 0) return;
-
-    QDate *date = new QDate(2015, month, day);
-
-    QString monthList[12] = {"января", "февраля", "марта", "апреля", "мая",
-                                 "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"};
-
-    this->chosenDate = QString::number(day) + " " + monthList[month - 1];
-    this->DATE = - date->daysTo(this->STARTDATE);
-    //День поменяли, надо и данные обновить
-    this->getDestTowns();
-}
-void BackEnd::setSeatsBooked(int count)
-{
-    this->SEATS_BOOKED = count;
-}
-void BackEnd::removeFromQueue()
-{
-    QNetworkAccessManager *pManager = new QNetworkAccessManager(this);
-    connect(pManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(slotDropFromQueue(QNetworkReply*)));
-    QString requestAddress(IP);
-    requestAddress.append("/dropFromQueue?");
-    requestAddress.append("human=" + this->HUMAN);
-    requestAddress.append("&time=" + QString::number(this->timeID));
-    requestAddress.append("&direction=" + QString::number(this->directionID));
-    requestAddress.append("&id=" + QString::number(this->ID));
-    requestAddress.append("&date=" + QString::number(this->DATE));
-    QNetworkRequest request(QUrl(requestAddress.toUtf8()));
-    pManager->get(request);
-}
-void BackEnd::slotDropFromQueue(QNetworkReply *reply)
-{
-    QString strReply(reply->readAll());
-    qDebug() << strReply << "removed from Queue";
-}
-
-void BackEnd::loadedRegPage()
-{
-    //Загрузка городов отправления
-    //установка сегодняшней даты
-    //установка количества мест, которые были установлены в предыдущий раз
-    //установка города отправления, который был назначен в предыдущий раз
-    //установка записи в "меню"
-
-    getSourceTowns();
-    this->townSource = 1;
-    getDestTowns();
-
-    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
-    toolBarText->setProperty("text", "Выберите направление");
-
-    QObject *tumblerDatePicker = mainWindow->findChild<QObject*>("tumblerDatePicker");
-    QVariant month;
-    month.setValue(QDate::currentDate().month());
-    QMetaObject::invokeMethod(tumblerDatePicker, "setMonth", Q_ARG(QVariant, month));
-    QVariant day;
-    day.setValue(QDate::currentDate().day());
-    QMetaObject::invokeMethod(tumblerDatePicker, "setDay", Q_ARG(QVariant, day));
-
-    QObject *textSeatsBooked = mainWindow->findChild<QObject *>("textSeatsBooked");
-    QString howMuchSeatsBooked = "Сколько ";
-    howMuchSeatsBooked.append(this->HUMAN == "driver" ? "свободных мест:" : "мест занять?:");
-    textSeatsBooked->setProperty("text", howMuchSeatsBooked);
-}
-void BackEnd::loadedHelloPage()
-{
-    //ничего в приницпе не надо делать
-    //установка записи в "меню"
-}
-void BackEnd::loadedTimePage()
-{
-    //загрузка данных
-    //Установка даты
-    //установка записи в "меню"
-    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
-    toolBarText->setProperty("text", "Выберите время");
-    connect(timer, SIGNAL(timeout()), this, SLOT(getTimeTableTimer()));
-}
-void BackEnd::loadedWaitingPage()
-{
-    //Установка даты
-    //установка маршрута
-    //установка записи в "меню"
-
-    QObject *directionText = mainWindow->findChild<QObject*>("directionText");
-    QObject *timeText = mainWindow->findChild<QObject*>("timeText");
-    QObject *drivePassTool = mainWindow->findChild<QObject*>("drivePassTool");
-
-    drivePassTool->setProperty("text", this->HUMAN == "driver" ? "Пассажиры:" : "Водитель");
-    directionText->setProperty("text", this->townSourceNames[this->townSource - 1] +
-        " - " + this->townSourceNames[this->townDestination - 1]);
-    timeText->setProperty("text", this->timeName);
-
-    connect(this->timer, SIGNAL(timeout()), this, SLOT(getQueueInfo()));
-    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
-    toolBarText->setProperty("text", "Ожидание");
-}
-
-void BackEnd::loadedSignal(QString url)
-{
-    qDebug() << "handled!\t" << url;
-    this->currentQML = url;
-
-    if(url == "qrc:/QMLs/RegPage.qml")
-        this->loadedRegPage();
-
-    if(url == "qrc:/QMLs/TimePage.qml")
-        this->loadedTimePage();
-    if(url == "qrc:/QMLs/WaitingPage.qml")
-        this->loadedWaitingPage();
-
 }
 void BackEnd::getDirection()
 {
@@ -417,11 +199,75 @@ void BackEnd::getDirection()
     QNetworkRequest request(QUrl(requestAddress.toUtf8()));
     pManager->get(request);
 }
-void BackEnd::loadingWaitingPage()
+void BackEnd::slotGotDirection(QNetworkReply *reply)
 {
-    QObject *loader = mainWindow->findChild<QObject*>("loader");
-    QString regPageQML = "qrc:/QMLs/WaitingPage.qml";
-    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(regPageQML)));
-    //Вот тут не аккуратно
-    this->standToQueue();
+    this->directionID = QString(reply->readAll()).toInt();
+
+    if(this->directionID == 0)
+        return;
+    this->settings->setValue("directionID", this->directionID);
+
+    QObject *goToTableButton = this->mainWindow->findChild<QObject*>("goToTableButton");
+    //Размораживаем Кнопку goToTable
+    goToTableButton->setProperty("enabled", "true");
+}
+void BackEnd::setDate(QDate date)
+{
+    qDebug() << "setting date";
+    this->DATE = date;
+    this->getDestTowns();
+}
+void BackEnd::setSeatsBooked(int count)
+{
+    this->SEATS_BOOKED = count;
+}
+
+
+void BackEnd::goDriversList()
+{
+    //direction found!
+    //Тут мы должны перевести чувака на TimePage
+    QObject *loader = this->mainWindow->findChild<QObject*>("loader");
+    QString driversList = "qrc:/QMLs/DrivesrList.qml";
+    QMetaObject::invokeMethod(loader, "setQML", Q_ARG(QVariant, QVariant::fromValue(driversList)));
+
+    //Установить там выбранную дату
+    QObject *timeTableTitle = this->mainWindow->findChild<QObject*>("timeTableTitle");
+    timeTableTitle->setProperty("text", this->chosenDate);
+}
+
+
+void BackEnd::loadedRegPage()
+{
+    //Загрузка городов отправления
+    //установка сегодняшней даты
+    //установка количества мест, которые были установлены в предыдущий раз
+    //установка города отправления, который был назначен в предыдущий раз
+    //установка записи в "меню"
+    getSourceTowns();
+    this->townSource = 1;
+    getDestTowns();
+
+    QObject *toolBarText = mainWindow->findChild<QObject*>("toolBarText");
+    toolBarText->setProperty("text",
+                             this->HUMAN == "driver" ? "Создать поездку" : "Найти водителя");
+
+    QObject *RegPage = mainWindow->findChild<QObject*>("RegPage");
+    RegPage->setProperty("human", this->HUMAN);
+
+}
+void BackEnd::loadedHelloPage()
+{
+    //ничего в приницпе не надо делать
+}
+void BackEnd::loadedSignal(QString url)
+{
+    qDebug() << "handled!\t" << url;
+    this->currentQML = url;
+
+    //this->settings->setValue("currentQML", url);
+    //this->settings->sync();
+
+    if(url == "qrc:/QMLs/RegPage.qml")
+        this->loadedRegPage();
 }

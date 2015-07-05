@@ -3,9 +3,7 @@
         <file>main.qml</file>
         <file>QMLs/HelloPage.qml</file>
         <file>QMLs/RegPage.qml</file>
-        <file>QMLs/TimePage.qml</file>
-        <file>QMLs/WaitingPage.qml</file>
-        <file>QMLs/StartPage.qml</file>
+        <file>QMLs/DriversList.qml</file>
     </qresource>
     <qresource prefix="/icons">
         <file>images/pngFromGoogle/car/ic_directions_car_black_48dp.png</file>

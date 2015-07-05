@@ -13,24 +13,29 @@ ApplicationWindow {
     objectName: "mainQML"
     id: mainQML
     property int fontPixelSize: (25.4 / 72) * Screen.pixelDensity
-
-    ToolBar {
+    property string human: ""
+    property color fonCode: "#d2c444"
+    Rectangle {
         id: toolBar
         x: 0
         y: 0
         width: parent.width
         height: parent.height / 10
+        color: "#e6d42b"
         //800 / 5 = 160
         //800 / 480 = 5 / 3;
         Text {
             id: toolBarText
             objectName: "toolBarText"
             text: "Добро пожаловать!"
+            anchors.rightMargin: parent.width * 0.1
+            anchors.leftMargin: parent.width * 0.1
             anchors.fill: parent
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "darkblue"
-            font.pixelSize: height * 0.4
+            font.pointSize: 72
+            fontSizeMode: Text.HorizontalFit
         }
     }
 
@@ -45,7 +50,6 @@ ApplicationWindow {
         onNo:
             sayToAuthor.close()
         function callOpen() {
-            console.log("open() called");
             sayToAuthor.open();
         }
     }
@@ -64,14 +68,15 @@ ApplicationWindow {
 
         function setQML(QML)
         {
+            console.log("setting ", QML)
+            console.log('start time: ', new Date().getTime() % 10000)
             loader.setSource(QML);
         }
 
         onLoaded: {
+            console.log('finish time:', new Date().getTime() % 10000)
             backEnd.loadedSignal(loader.source);
         }
-
-
     }
 }
 

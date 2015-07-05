@@ -6,45 +6,48 @@ import QtQuick.Enterprise.Controls 1.3
 Rectangle {
     anchors.fill: parent
     id: helloPage
-    color: 'darkgrey'
+    color: mainQML.fonCode
     Rectangle {
         //Название программы
         id: title
-
-        color: parent.color
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.topMargin: parent.height / 40
-        height: parent.height / 15
+        anchors{
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            bottom: passengerButton.top
+        }
+        color: mainQML.fonCode
         Text {
             anchors.fill: parent
-            text: "Мы Вас не знаем..."
-            font.pixelSize: height
+            text: "в сообщество попутчиков и водителей по Уфе!"
+            font.pixelSize: parent.height * 0.1
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: "white"
+            color: "black"
+            wrapMode: Text.WordWrap
         }
     }
-
     TextField {
         //Ваше Имя
         id: humanName
         objectName: "NAME"
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
+        anchors{
+            left: parent.left
+            right: parent.right
+            top: parent.top
+            leftMargin: parent.width / 10
+            rightMargin: parent.width / 10
+            topMargin: parent.height / 2
+        }
         height: parent.height / 10
         width: parent.width
-        anchors.leftMargin: parent.width / 10
-        anchors.rightMargin: parent.width / 10
-        anchors.topMargin: parent.height / 2
         font.pixelSize: height / 2
         placeholderText: "Ваше имя"
-
+        visible: plus7.visible
         validator: RegExpValidator {
                     regExp: /[а-яА-Яa-zA-Z]{10}/
                 }
+        layer.format: "RGB"
         Keys.onPressed: {
                     if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
                         Qt.inputMethod.hide()
@@ -68,6 +71,7 @@ Rectangle {
         font.pixelSize: height / 2
         placeholderText: "Номер телефона"
         inputMethodHints: Qt.ImhPreferNumbers
+        visible: plus7.visible
         Keys.onPressed: {
                 //Свернуть клавиатуру
                     if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
@@ -82,7 +86,7 @@ Rectangle {
         id: passengerButton
         Text {
             anchors.centerIn: parent
-            text: "Попутчик"
+            text: "Пассажир"
             font.pixelSize: parent.height / 2
         }
         MouseArea {
@@ -136,6 +140,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: height / 2
+        visible: !driverButton.enabled
         text: "+7"
     }
     Button {
@@ -146,7 +151,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 20
         height: parent.height / 10
-        enabled: phoneNumber.text.length == 10
+        enabled: phoneNumber.text.length == 10 || !plus7.visible
         Text {
             anchors.fill: parent
             text: "Далее"
@@ -155,14 +160,13 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
         onClicked: {
+            if(plus7.visible)
+                backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
+                    "8" + phoneNumber.text, humanName.text);
+            else backEnd.loadingRegPage()
 
-            backEnd.registrationInServer(driverButton.enabled ? "passenger" : "driver",
-                                                                "8" + phoneNumber.text, humanName.text);
         }
 
-        function registrationSuccess() {
-            backEnd.loadingRegPage();
-        }
         function failRegistration(text) {
             toolBarText.text = text
         }

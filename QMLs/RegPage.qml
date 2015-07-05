@@ -1,174 +1,253 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
-import QtQuick.Enterprise.Controls 1.3
+import QtQuick.Dialogs 1.2
+import QtQuick.Enterprise.Controls 1.2
 
 Rectangle {
     id: globalParent
     objectName: "RegPage"
     anchors.fill: parent
-    color: 'darkgrey'
-    property int monthChosen: 1
-    property int dayChosen: 1
+    property int heightMargin: height * 0.042
+    property int side_margin: parent.width * 0.05
+    property string human: ""
+
+    Text {
+        anchors {
+            left: parent.left
+            right: sourceTown.left
+            top: sourceTown.top
+            bottom: sourceTown.bottom
+            leftMargin: side_margin
+        }
+
+        text: "Откуда"
+        font.pixelSize: height * 0.6
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
+    }
 
     ComboBox {
         id: sourceTown
         objectName: "sourceTowns"
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.topMargin: parent.height / 15
-        anchors.leftMargin: parent.width / 20
-        height: parent.height / 10
-        width: parent.width * 0.4
-        model: ListModel {}
-        function append(newTown)
-        {
-            sourceTown.model.append(newTown);
-        }
-        function clearList()
-        {
-            sourceTown.model.clear();
+        anchors {
+            right: parent.right
+            top: parent.top
+            topMargin: heightMargin
+            rightMargin: side_margin
         }
 
-        onCurrentIndexChanged: {
-            backEnd.setSourceTown(currentIndex + 1);
+        height: parent.height / 10
+        width: parent.width * 0.55
+        model: ListModel {}
+        function append(newTown) {
+            sourceTown.model.append(newTown);
         }
+        function clearList() {
+            //sourceTown.model.clear();
+        }
+        onCurrentIndexChanged: {
+            if(sourceTown.model.count > 0)
+                backEnd.setSourceTown(currentIndex + 1);
+        }
+    }
+
+    Text {
+        anchors {
+            left: parent.left
+            right: destinationTown.left
+            top: destinationTown.top
+            bottom:destinationTown.bottom
+            leftMargin: side_margin
+        }
+        text: "Куда"
+        font.pixelSize: height * 0.6
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
     }
 
     ComboBox {
         id: destinationTown
         objectName: "destinationTowns"
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.topMargin: parent.height / 15
-        anchors.rightMargin: parent.width / 20
+        anchors {
+            right: parent.right
+            top: sourceTown.bottom
+            topMargin: heightMargin
+            rightMargin: side_margin
+        }
+        width: parent.width * 0.55
         height: parent.height / 10
-        width: parent.width * 0.4
+
         
         model: ListModel {
         }
 
-        function append(newTown)        {
+        function append(newTown) {
             destinationTown.model.append(newTown);
         }
-        function clearList()        {
+        function clearList() {
             destinationTown.model.clear();
         }
-
         onCurrentIndexChanged: {
-            backEnd.setDestinationTown(currentIndex + 1);
+            if(destinationTown.model.count > 0)
+                backEnd.setDestinationTown(currentIndex + 1);
         }
-    }
-
-    ComboBox {
-        id: numberSeats
-        anchors.right: parent.right
-        anchors.top: destinationTown.bottom
-        anchors.topMargin: parent.height / 15
-        anchors.rightMargin: parent.width / 20
-        width: parent.width / 6
-        height: parent.height / 10
-        model: ListModel {
-            ListElement { text: "1" }
-            ListElement { text: "2" }
-            ListElement { text: "3" }
-            ListElement { text: "4" }
-        }
-        onCurrentIndexChanged: {
-            backEnd.setSeatsBooked(currentIndex + 1);
-        }
-    }
-
-    Text {
-        //Подпись для количества мест
-        id: textSeatsBooked
-        objectName: "textSeatsBooked"
-        anchors.top: sourceTown.bottom
-        anchors.topMargin: parent.height / 20
-        anchors.right: numberSeats.left
-        anchors.rightMargin: parent.width / 40
-        anchors.left: parent.left
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        height: parent.height / 10
-        font.pixelSize: height * 0.3
     }
 
     Text {
         id: titleDateChoose
-        anchors.top: numberSeats.bottom
-        anchors.topMargin: parent.height / 10
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: parent.height / 15
-        horizontalAlignment: Text.AlignHCenter
+        anchors {
+            top: selectDate.top
+            right: selectDate.left
+            left: parent.left
+            bottom: selectDate.bottom
+            leftMargin: side_margin
+        }
+        horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: height * 0.6
-        text: "Выберите дату поездки"
+        text: "Когда"
     }
 
-    Rectangle{
+    Rectangle {
         //Выбор даты
         id: selectDate
-        anchors.top: titleDateChoose.bottom
-        anchors.left: parent.left
-        width: parent.width
-        anchors.bottom: goTable.top
-        color: parent.color
-            //"#00ff00"
-
-        Tumbler {
-            id: tumblerDatePicker
-            objectName: "tumblerDatePicker"
-            anchors.centerIn: parent
-            height: parent.height * 0.7
-            //День
-            TumblerColumn {
-                id: daysColumn
-                width: selectDate.width * 0.15
-                model: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-                onCurrentIndexChanged: {
-                    backEnd.setDate(daysColumn.currentIndex + 1, monthsColumn.currentIndex + 1);
-                }
-            }
-            //Месяц
-            TumblerColumn {
-                id: monthsColumn
-                width: selectDate.width * 0.25
-                model: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентярь", "Октярь", "Ноябрь", "Декабрь"]
-
-                onCurrentIndexChanged: {
-                    if(currentIndex == 0 || currentIndex == 2 || currentIndex == 4 ||
-                            currentIndex == 6 || currentIndex == 7 || currentIndex == 9 ||
-                            currentIndex == 11)
-                        daysColumn.model = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30, 31];
-                    else
-                    if (currentIndex == 1) daysColumn.model = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28];
-                    else
-                    daysColumn.model = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
-                }
-
-            }
-
-            TumblerColumn {
-                width: selectDate.width * 0.15
-                model: [2015]
-            }
-            function setDay(day) {
-                tumblerDatePicker.setCurrentIndexAt(0, day - 1);
-            }
-            function setMonth(month) {
-                tumblerDatePicker.setCurrentIndexAt(1, month - 1);
+        anchors {
+            right: parent.right
+            top: destinationTown.bottom
+            topMargin: heightMargin
+            rightMargin: side_margin
+        }
+        height:parent.height / 10
+        width: parent.width * 0.55
+        radius: height / 4
+        Text {
+            id: selectDateText
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: parent.height * 0.6
+            text: new Date().toLocaleDateString()
+            fontSizeMode: Text.HorizontalFit
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                chosseDateDialog.open()
             }
         }
+    }
 
+    Dialog {
+        id: chosseDateDialog
+        title: "Выберите дату"
+        Calendar {
+            selectedDate : new Date()
+            onClicked: {
+                selectDateText.text = selectedDate.toLocaleDateString();
+                backEnd.setDate(selectDate);
+            }
+        }
+    }
+
+    Rectangle {
+        id: selectTime
+        anchors {
+            top: numberSeats.bottom
+            right: parent.right
+            topMargin: heightMargin
+            rightMargin: side_margin
+        }
+        visible: human == "driver"
+        width: parent.width * 0.55
+        height: parent.height * 0.1
+        Text {
+            id: selectTimeText
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: height / 2
+            text: (new Date().toTimeString()).slice(0,5)
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                selectTimeDialog.open();
+                timeSelectTubmler.onLoaded();
+            }
+        }
+    }
+
+    Dialog {
+        id: selectTimeDialog
+        title: "Выберите точное время"
+        Tumbler {
+            id: timeSelectTubmler
+
+            TumblerColumn {
+                id: hoursColumn
+                model: ListModel {}
+            }
+            TumblerColumn {
+                id: minutesColumn
+
+                model: ListModel {}
+            }
+            function onLoaded() {
+                for(var i = 0; i < 24; i ++)
+                    hoursColumn.model.append({"value": i < 10 ? "0" + i : "" + i})
+                for(var i = 0; i < 60; i ++)
+                    minutesColumn.model.append({"value": i < 10 ? "0" + i : "" + i})
+                timeSelectTubmler.setCurrentIndexAt(0, new Date().getHours());
+                timeSelectTubmler.setCurrentIndexAt(1, new Date().getMinutes());
+            }
+        }
+        onAccepted: {
+            var hh = (hoursColumn.currentIndex < 10 ? "0" : "") + hoursColumn.currentIndex;
+            var mm = (minutesColumn.currentIndex < 10 ? "0" : "") + minutesColumn.currentIndex;
+            selectTimeText.text = hh + ":" + mm;
+            backEnd.setExactTime(hh + ":" + mm);
+        }
+    }
+
+    Text {
+        id: titleSelectTime
+        anchors {
+            top: selectTime.top
+            bottom: selectTime.bottom
+            right: selectTime.left
+            left: parent.left
+            leftMargin: side_margin
+            rightMargin: parent.width * 0.02
+        }
+        visible: human == "driver"
+        font.pointSize: 72
+        fontSizeMode: Text.HorizontalFit
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter
+        text: "Точное время"
+    }
+
+
+    TextField {
+        id: exactStreet
+        anchors {
+            left: parent.left
+            right: parent.right
+            top: selectTime.bottom
+            topMargin: heightMargin
+            rightMargin: side_margin
+            leftMargin: side_margin
+        }
+        visible: human == "driver"
+        height: parent.height / 10
+        placeholderText: "Улица, дом в Уфе"
     }
 
     Button {
-        id: goTable
-        objectName: "goToTableButton"
+        id: goDriversList
+        objectName: "goDriversList"
         anchors.right: parent.right
-        //width: parent.width * 0.7
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height * 0.02
@@ -176,16 +255,15 @@ Rectangle {
         anchors.leftMargin: parent.width * 0.01
 
         height: parent.height / 10
-
-        Text {
-            anchors.fill: parent
-            text: "Далее"
-            font.pixelSize: height * 0.8
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
+        text: qsTr("Далее")
+        isDefault: false
+        activeFocusOnPress: false
         onClicked: {
-            backEnd.goTimeTable();
+            backEnd.goDriversList
         }
     }
+
+
+
+
 }
